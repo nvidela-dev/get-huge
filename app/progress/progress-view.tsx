@@ -144,8 +144,8 @@ export function ProgressView({
                         }}
                         labelStyle={{ color: "#d4d4d4" }}
                         itemStyle={{ color: "#dc2626" }}
-                        formatter={(value: number) => [
-                          `${value} ${weightUnit}`,
+                        formatter={(value) => [
+                          `${value ?? 0} ${weightUnit}`,
                           "Weight",
                         ]}
                       />
@@ -194,8 +194,8 @@ export function ProgressView({
                         }}
                         labelStyle={{ color: "#d4d4d4" }}
                         itemStyle={{ color: "#991b1b" }}
-                        formatter={(value: number) => [
-                          `${value.toLocaleString()} ${weightUnit}`,
+                        formatter={(value) => [
+                          `${(value ?? 0).toLocaleString()} ${weightUnit}`,
                           "Volume",
                         ]}
                       />
