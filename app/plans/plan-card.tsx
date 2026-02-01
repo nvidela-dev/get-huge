@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { selectPlan } from "./actions";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface PlanCardProps {
   plan: {
@@ -28,8 +29,9 @@ export function PlanCard({ plan }: PlanCardProps) {
   };
 
   return (
-    <div
-      className={`card-brutal p-6 ${plan.isSelected ? "border-crimson border-2" : ""}`}
+    <Link
+      href={`/plans/${plan.id}`}
+      className={`block card-brutal p-6 hover:border-crimson/50 transition-colors ${plan.isSelected ? "border-crimson border-2" : ""}`}
     >
       <div className="flex justify-between items-start mb-4">
         <div>
@@ -53,19 +55,22 @@ export function PlanCard({ plan }: PlanCardProps) {
             key={day.id}
             className="bg-steel-light px-3 py-1 text-xs text-bone/80 uppercase tracking-wider"
           >
-            {day.name}
+            Session {day.dayNumber}
           </span>
         ))}
       </div>
 
       <div className="flex justify-between items-center">
         <div className="text-bone/40 text-sm">
-          {plan.daysPerWeek} days/week • {plan.totalExercises} exercises
+          {plan.daysPerWeek} sessions/week • {plan.totalExercises} exercises
         </div>
 
         {!plan.isSelected && (
           <button
-            onClick={handleSelect}
+            onClick={(e) => {
+              e.preventDefault();
+              handleSelect();
+            }}
             disabled={isPending}
             className="btn-brutal px-6 py-2 text-sm font-[family-name:var(--font-bebas)] tracking-wider disabled:opacity-50"
           >
@@ -73,6 +78,6 @@ export function PlanCard({ plan }: PlanCardProps) {
           </button>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
