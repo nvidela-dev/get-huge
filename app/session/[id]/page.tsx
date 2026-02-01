@@ -65,14 +65,14 @@ export default async function ActiveSessionPage({ params }: Props) {
     .where(eq(planDayExercises.planDayId, result.planDay.id))
     .orderBy(planDayExercises.order);
 
-  // Get last weights for each exercise from previous sessions
+  // Get last weight and reps for each exercise from previous sessions
   const exerciseIds = dayExercises.map((e) => e.id);
-  const lastWeights: Record<string, string> = {};
+  const exerciseHistory: Record<string, { weight: string; reps: number }> = {};
 
   for (const exerciseId of exerciseIds) {
     // Get the most recent set for this exercise from a previous session
     const lastSet = await db
-      .select({ weight: sessionSets.weight })
+      .select({ weight: sessionSets.weight, reps: sessionSets.reps })
       .from(sessionSets)
       .innerJoin(sessions, eq(sessionSets.sessionId, sessions.id))
       .where(
@@ -87,7 +87,10 @@ export default async function ActiveSessionPage({ params }: Props) {
       .limit(1);
 
     if (lastSet[0]) {
-      lastWeights[exerciseId] = lastSet[0].weight;
+      exerciseHistory[exerciseId] = {
+        weight: lastSet[0].weight,
+        reps: lastSet[0].reps,
+      };
     }
   }
 
@@ -103,7 +106,7 @@ export default async function ActiveSessionPage({ params }: Props) {
       planDay={result.planDay}
       exercises={dayExercises}
       loggedSets={loggedSets}
-      lastWeights={lastWeights}
+      exerciseHistory={exerciseHistory}
       weightUnit={user.weightUnit}
       translations={t}
     />

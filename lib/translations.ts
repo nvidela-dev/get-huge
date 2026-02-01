@@ -148,6 +148,7 @@ export const translations = {
       complete: "COMPLETE",
       moveToNext: "Move to the next exercise",
       setOf: "of",
+      increaseWeight: "You hit 12 reps! Consider increasing weight",
     },
 
     // Onboarding
@@ -323,6 +324,7 @@ export const translations = {
       complete: "COMPLETADO",
       moveToNext: "Pasa al siguiente ejercicio",
       setOf: "de",
+      increaseWeight: "¡Llegaste a 12 reps! Considera aumentar el peso",
     },
 
     // Onboarding

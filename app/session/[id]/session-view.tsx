@@ -34,7 +34,7 @@ interface SessionViewProps {
     reps: number;
     isWarmup: boolean;
   }[];
-  lastWeights: Record<string, string>;
+  exerciseHistory: Record<string, { weight: string; reps: number }>;
   weightUnit: string;
   translations: Translations;
 }
@@ -44,7 +44,7 @@ export function SessionView({
   planDay,
   exercises,
   loggedSets,
-  lastWeights,
+  exerciseHistory,
   weightUnit,
   translations: t,
 }: SessionViewProps) {
@@ -136,7 +136,7 @@ export function SessionView({
             sessionId={session.id}
             exercise={currentExercise}
             sets={exerciseSets}
-            lastWeight={lastWeights[currentExercise.id]}
+            history={exerciseHistory[currentExercise.id]}
             weightUnit={weightUnit}
             onSetLogged={() => router.refresh()}
             translations={t}
@@ -175,7 +175,7 @@ interface ExerciseCardProps {
     weight: string;
     reps: number;
   }[];
-  lastWeight?: string;
+  history?: { weight: string; reps: number };
   weightUnit: string;
   onSetLogged: () => void;
   translations: Translations;
@@ -185,35 +185,67 @@ function ExerciseCard({
   sessionId,
   exercise,
   sets,
-  lastWeight,
+  history,
   weightUnit,
   onSetLogged,
   translations: t,
 }: ExerciseCardProps) {
-  // Weight priority: 1) last set in current session, 2) last logged weight from history, 3) empty
-  const getDefaultWeight = () => {
+  const MAX_REPS = 12;
+  const MIN_REPS = 8;
+
+  // Calculate suggested weight and reps based on progression
+  const getDefaults = () => {
+    // Priority 1: Use last set from current session
     if (sets.length > 0) {
-      return sets[sets.length - 1].weight;
+      const lastSet = sets[sets.length - 1];
+      return {
+        weight: lastSet.weight,
+        reps: lastSet.reps,
+        suggestWeightIncrease: false,
+      };
     }
-    return lastWeight ?? "";
+
+    // Priority 2: Use history with progression logic
+    if (history) {
+      const lastReps = history.reps;
+
+      // If at or above max reps, suggest weight increase and reset to min reps
+      if (lastReps >= MAX_REPS) {
+        return {
+          weight: history.weight,
+          reps: MIN_REPS,
+          suggestWeightIncrease: true,
+        };
+      }
+
+      // Otherwise, suggest +1 rep at same weight
+      return {
+        weight: history.weight,
+        reps: Math.min(lastReps + 1, MAX_REPS),
+        suggestWeightIncrease: false,
+      };
+    }
+
+    // Priority 3: No history, use defaults
+    return {
+      weight: "",
+      reps: exercise.defaultReps,
+      suggestWeightIncrease: false,
+    };
   };
 
-  // Reps priority: 1) last set in current session, 2) defaultReps from plan
-  const getDefaultReps = () => {
-    if (sets.length > 0) {
-      return sets[sets.length - 1].reps.toString();
-    }
-    return exercise.defaultReps.toString();
-  };
-
-  const [weight, setWeight] = useState(getDefaultWeight);
-  const [reps, setReps] = useState(getDefaultReps);
+  const defaults = getDefaults();
+  const [weight, setWeight] = useState(defaults.weight);
+  const [reps, setReps] = useState(defaults.reps.toString());
   const [isLogging, setIsLogging] = useState(false);
+  const [showWeightHint, setShowWeightHint] = useState(defaults.suggestWeightIncrease);
 
   // Update defaults when switching exercises or after logging a set
   useEffect(() => {
-    setWeight(getDefaultWeight());
-    setReps(getDefaultReps());
+    const newDefaults = getDefaults();
+    setWeight(newDefaults.weight);
+    setReps(newDefaults.reps.toString());
+    setShowWeightHint(newDefaults.suggestWeightIncrease);
   }, [exercise.id, sets.length]);
 
   const nextSetNumber = sets.length + 1;
@@ -265,6 +297,15 @@ function ExerciseCard({
           <p className="text-bone/60 text-xs uppercase tracking-wider text-center">
             {t.common.set} {nextSetNumber} {t.session.setOf} {exercise.targetSets}
           </p>
+
+          {/* Weight increase suggestion */}
+          {showWeightHint && (
+            <div className="bg-amber-500/10 border border-amber-500/30 p-3 text-center">
+              <p className="text-amber-500 text-sm">
+                ↑ {t.session.increaseWeight}
+              </p>
+            </div>
+          )}
 
           <div className="flex gap-4">
             <div className="flex-1">
