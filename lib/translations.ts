@@ -11,6 +11,7 @@ export const translations = {
       history: "History",
       progress: "Progress",
       plans: "Plans",
+      settings: "Settings",
       back: "← Back",
     },
 
@@ -154,6 +155,15 @@ export const translations = {
       continue: "CONTINUE",
     },
 
+    // Settings page
+    settings: {
+      title: "SETTINGS",
+      language: "Language",
+      languageDesc: "Choose your preferred language",
+      saved: "Saved!",
+      saving: "Saving...",
+    },
+
     // Common
     common: {
       loading: "Loading...",
@@ -172,6 +182,7 @@ export const translations = {
       history: "Historial",
       progress: "Progreso",
       plans: "Planes",
+      settings: "Ajustes",
       back: "← Volver",
     },
 
@@ -313,6 +324,15 @@ export const translations = {
       english: "English",
       spanish: "Español",
       continue: "CONTINUAR",
+    },
+
+    // Settings page
+    settings: {
+      title: "AJUSTES",
+      language: "Idioma",
+      languageDesc: "Elige tu idioma preferido",
+      saved: "¡Guardado!",
+      saving: "Guardando...",
     },
 
     // Common
