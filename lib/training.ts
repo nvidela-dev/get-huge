@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
-import { sessions, users, planDays, planDayExercises, exercises } from "@/lib/db/schema";
-import { eq, and, gte, lte, isNotNull, count } from "drizzle-orm";
-import { startOfWeek, endOfWeek, differenceInDays } from "date-fns";
+import { sessions, users, planDays, planDayExercises, exercises, sessionSets } from "@/lib/db/schema";
+import { eq, and, gte, lte, lt, isNotNull, count, desc } from "drizzle-orm";
+import { startOfWeek, endOfWeek, differenceInDays, startOfDay, endOfDay, subDays } from "date-fns";
 
 interface TrainingDay {
   weekNumber: number;
@@ -18,10 +18,25 @@ interface TrainingDay {
   }[];
 }
 
+interface TodaysWorkout {
+  sessionId: string;
+  dayName: string;
+  weekNumber: number;
+  dayNumber: number;
+  startedAt: Date;
+  endedAt: Date;
+  totalSets: number;
+  exercises: {
+    name: string;
+    sets: number;
+  }[];
+}
+
 interface TrainingStatus {
-  type: "ready" | "week_complete" | "no_plan";
+  type: "ready" | "week_complete" | "no_plan" | "trained_today" | "recovery_day";
   trainingDay?: TrainingDay;
   sessionsThisWeek?: number;
+  todaysWorkout?: TodaysWorkout;
 }
 
 export async function getTrainingStatus(userId: string): Promise<TrainingStatus> {
@@ -39,6 +54,97 @@ export async function getTrainingStatus(userId: string): Promise<TrainingStatus>
   }
 
   const today = new Date();
+  const todayStart = startOfDay(today);
+  const todayEnd = endOfDay(today);
+  const yesterday = subDays(today, 1);
+  const yesterdayStart = startOfDay(yesterday);
+  const yesterdayEnd = endOfDay(yesterday);
+
+  // Check for completed session today
+  const todaySessionResults = await db
+    .select({
+      id: sessions.id,
+      weekNumber: sessions.weekNumber,
+      dayInWeek: sessions.dayInWeek,
+      startedAt: sessions.startedAt,
+      endedAt: sessions.endedAt,
+      planDayId: sessions.planDayId,
+    })
+    .from(sessions)
+    .where(
+      and(
+        eq(sessions.userId, userId),
+        gte(sessions.startedAt, todayStart),
+        lte(sessions.startedAt, todayEnd),
+        isNotNull(sessions.endedAt)
+      )
+    )
+    .orderBy(desc(sessions.endedAt))
+    .limit(1);
+
+  const todaySession = todaySessionResults[0];
+
+  // If user trained today, show today's workout summary
+  if (todaySession) {
+    // Get the plan day name
+    const planDayResult = await db
+      .select({ name: planDays.name })
+      .from(planDays)
+      .where(eq(planDays.id, todaySession.planDayId))
+      .limit(1);
+
+    // Get exercise summary for today's session
+    const exerciseSummary = await db
+      .select({
+        name: exercises.name,
+        setCount: count(),
+      })
+      .from(sessionSets)
+      .innerJoin(exercises, eq(sessionSets.exerciseId, exercises.id))
+      .where(eq(sessionSets.sessionId, todaySession.id))
+      .groupBy(exercises.name);
+
+    const totalSets = exerciseSummary.reduce((sum, ex) => sum + ex.setCount, 0);
+
+    return {
+      type: "trained_today",
+      todaysWorkout: {
+        sessionId: todaySession.id,
+        dayName: planDayResult[0]?.name ?? "Workout",
+        weekNumber: todaySession.weekNumber,
+        dayNumber: todaySession.dayInWeek,
+        startedAt: todaySession.startedAt,
+        endedAt: todaySession.endedAt!,
+        totalSets,
+        exercises: exerciseSummary.map(ex => ({
+          name: ex.name,
+          sets: ex.setCount,
+        })),
+      },
+    };
+  }
+
+  // Check for completed session yesterday
+  const yesterdaySessionResults = await db
+    .select({ id: sessions.id })
+    .from(sessions)
+    .where(
+      and(
+        eq(sessions.userId, userId),
+        gte(sessions.startedAt, yesterdayStart),
+        lte(sessions.startedAt, yesterdayEnd),
+        isNotNull(sessions.endedAt)
+      )
+    )
+    .limit(1);
+
+  const trainedYesterday = yesterdaySessionResults.length > 0;
+
+  // If user trained yesterday but not today, suggest recovery
+  if (trainedYesterday) {
+    return { type: "recovery_day" };
+  }
+
   const planStartDate = new Date(user.planStartDate);
 
   // Calculate which week of the program we're in
