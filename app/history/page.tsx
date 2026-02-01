@@ -5,6 +5,7 @@ import { getOrCreateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
+import { getTranslations, type Language } from "@/lib/translations";
 
 export default async function HistoryPage() {
   const user = await getOrCreateUser();
@@ -12,6 +13,8 @@ export default async function HistoryPage() {
   if (!user) {
     redirect("/sign-in");
   }
+
+  const t = getTranslations(user.language as Language);
 
   // Get all completed sessions with plan day info
   const userSessions = await db
@@ -62,7 +65,7 @@ export default async function HistoryPage() {
           href="/"
           className="font-[family-name:var(--font-bebas)] text-2xl tracking-wider text-crimson"
         >
-          LIFTTRACK
+          {t.appName}
         </Link>
       </header>
 
@@ -70,18 +73,17 @@ export default async function HistoryPage() {
       <main className="flex-1 p-6">
         <div className="max-w-2xl mx-auto">
           <h1 className="font-[family-name:var(--font-bebas)] text-4xl tracking-wide text-foreground mb-2">
-            HISTORY
+            {t.history.title}
           </h1>
           <p className="text-bone/60 mb-8">
-            {completedSessions.length} session
-            {completedSessions.length !== 1 ? "s" : ""} completed
+            {completedSessions.length} {t.history.totalSets === "series" ? "sesiones completadas" : `session${completedSessions.length !== 1 ? "s" : ""} completed`}
           </p>
 
           {/* In progress session */}
           {inProgressSession && (
             <div className="mb-8">
               <p className="text-crimson text-xs uppercase tracking-wider mb-2">
-                In Progress
+                {t.history.inProgress}
               </p>
               <Link
                 href={`/session/${inProgressSession.id}`}
@@ -93,12 +95,12 @@ export default async function HistoryPage() {
                       {inProgressSession.dayName.toUpperCase()}
                     </p>
                     <p className="text-bone/60 text-sm">
-                      Week {inProgressSession.weekNumber} • Session{" "}
+                      {t.home.week} {inProgressSession.weekNumber} • {t.home.session}{" "}
                       {inProgressSession.dayInWeek}
                     </p>
                   </div>
                   <span className="text-crimson text-sm font-bold">
-                    CONTINUE →
+                    {t.history.continue}
                   </span>
                 </div>
               </Link>
@@ -119,7 +121,7 @@ export default async function HistoryPage() {
                       {session.dayName.toUpperCase()}
                     </p>
                     <p className="text-bone/60 text-sm">
-                      Week {session.weekNumber} • Session {session.dayInWeek}
+                      {t.home.week} {session.weekNumber} • {t.home.session} {session.dayInWeek}
                     </p>
                   </div>
                   <p className="text-bone/40 text-sm">
@@ -127,7 +129,7 @@ export default async function HistoryPage() {
                   </p>
                 </div>
                 <div className="flex gap-4 text-sm text-bone/60">
-                  <span>{session.totalSets} sets</span>
+                  <span>{session.totalSets} {t.history.totalSets}</span>
                   {session.duration && (
                     <span>{formatDuration(session.duration)}</span>
                   )}
@@ -138,15 +140,15 @@ export default async function HistoryPage() {
 
           {completedSessions.length === 0 && !inProgressSession && (
             <div className="card-brutal p-8 text-center">
-              <p className="text-bone/60">No sessions yet.</p>
+              <p className="text-bone/60">{t.history.noSessions}</p>
               <p className="text-bone/40 text-sm mt-2">
-                Start your first workout to see it here.
+                {t.history.startFirst}
               </p>
               <Link
                 href="/"
                 className="btn-brutal inline-block px-6 py-2 mt-4 text-sm font-[family-name:var(--font-bebas)] tracking-wider"
               >
-                GO TRAIN
+                {t.home.startSession}
               </Link>
             </div>
           )}
@@ -157,14 +159,14 @@ export default async function HistoryPage() {
       <nav className="border-t border-steel-light p-4">
         <div className="flex justify-around text-bone/60 text-sm">
           <Link href="/" className="hover:text-bone">
-            Today
+            {t.nav.today}
           </Link>
-          <span className="text-crimson">History</span>
+          <span className="text-crimson">{t.nav.history}</span>
           <Link href="/progress" className="hover:text-bone">
-            Progress
+            {t.nav.progress}
           </Link>
           <Link href="/plans" className="hover:text-bone">
-            Plans
+            {t.nav.plans}
           </Link>
         </div>
       </nav>

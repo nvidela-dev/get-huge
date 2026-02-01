@@ -5,6 +5,7 @@ import { getOrCreateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ProgressView } from "./progress-view";
+import { getTranslations, type Language } from "@/lib/translations";
 
 interface Props {
   searchParams: Promise<{ exercise?: string }>;
@@ -17,6 +18,8 @@ export default async function ProgressPage({ searchParams }: Props) {
   if (!user) {
     redirect("/sign-in");
   }
+
+  const t = getTranslations(user.language as Language);
 
   // Get all exercises the user has logged sets for
   const userExercises = await db
@@ -84,7 +87,7 @@ export default async function ProgressPage({ searchParams }: Props) {
           href="/"
           className="font-[family-name:var(--font-bebas)] text-2xl tracking-wider text-crimson"
         >
-          LIFTTRACK
+          {t.appName}
         </Link>
       </header>
 
@@ -92,21 +95,21 @@ export default async function ProgressPage({ searchParams }: Props) {
       <main className="flex-1 p-6">
         <div className="max-w-2xl mx-auto">
           <h1 className="font-[family-name:var(--font-bebas)] text-4xl tracking-wide text-foreground mb-2">
-            PROGRESS
+            {t.progress.title}
           </h1>
-          <p className="text-bone/60 mb-6">Track your gains over time</p>
+          <p className="text-bone/60 mb-6">{t.progress.subtitle}</p>
 
           {userExercises.length === 0 ? (
             <div className="card-brutal p-8 text-center">
-              <p className="text-bone/60">No data yet.</p>
+              <p className="text-bone/60">{t.progress.noData}</p>
               <p className="text-bone/40 text-sm mt-2">
-                Complete some sessions to see your progress.
+                {t.progress.noDataDesc}
               </p>
               <Link
                 href="/"
                 className="btn-brutal inline-block px-6 py-2 mt-4 text-sm font-[family-name:var(--font-bebas)] tracking-wider"
               >
-                GO TRAIN
+                {t.progress.goTrain}
               </Link>
             </div>
           ) : (
@@ -121,6 +124,7 @@ export default async function ProgressPage({ searchParams }: Props) {
                 totalSets,
               }}
               weightUnit={user.weightUnit}
+              translations={t}
             />
           )}
         </div>
@@ -130,14 +134,14 @@ export default async function ProgressPage({ searchParams }: Props) {
       <nav className="border-t border-steel-light p-4">
         <div className="flex justify-around text-bone/60 text-sm">
           <Link href="/" className="hover:text-bone">
-            Today
+            {t.nav.today}
           </Link>
           <Link href="/history" className="hover:text-bone">
-            History
+            {t.nav.history}
           </Link>
-          <span className="text-crimson">Progress</span>
+          <span className="text-crimson">{t.nav.progress}</span>
           <Link href="/plans" className="hover:text-bone">
-            Plans
+            {t.nav.plans}
           </Link>
         </div>
       </nav>

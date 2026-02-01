@@ -5,6 +5,7 @@ import { getOrCreateUser } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { PlanDetailView } from "./plan-detail-view";
+import { getTranslations, type Language } from "@/lib/translations";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -17,6 +18,8 @@ export default async function PlanDetailPage({ params }: Props) {
   if (!user) {
     redirect("/sign-in");
   }
+
+  const t = getTranslations(user.language as Language);
 
   // Get plan
   const planResults = await db
@@ -76,11 +79,11 @@ export default async function PlanDetailPage({ params }: Props) {
           href="/plans"
           className="text-bone/60 hover:text-bone transition-colors"
         >
-          ← Back
+          {t.nav.back}
         </Link>
         {isSelected && (
           <span className="text-crimson text-xs uppercase tracking-wider font-bold">
-            Active Plan
+            {t.plans.activePlan}
           </span>
         )}
       </header>
@@ -94,21 +97,22 @@ export default async function PlanDetailPage({ params }: Props) {
         }}
         days={daysWithExercises}
         isSelected={isSelected}
+        translations={t}
       />
 
       {/* Footer nav */}
       <nav className="border-t border-steel-light p-4">
         <div className="flex justify-around text-bone/60 text-sm">
           <Link href="/" className="hover:text-bone">
-            Today
+            {t.nav.today}
           </Link>
           <Link href="/history" className="hover:text-bone">
-            History
+            {t.nav.history}
           </Link>
           <Link href="/progress" className="hover:text-bone">
-            Progress
+            {t.nav.progress}
           </Link>
-          <span className="text-crimson">Plans</span>
+          <span className="text-crimson">{t.nav.plans}</span>
         </div>
       </nav>
     </div>

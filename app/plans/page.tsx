@@ -5,6 +5,7 @@ import { getOrCreateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { PlanCard } from "./plan-card";
+import { getTranslations, type Language } from "@/lib/translations";
 
 export default async function PlansPage() {
   const user = await getOrCreateUser();
@@ -12,6 +13,8 @@ export default async function PlansPage() {
   if (!user) {
     redirect("/sign-in");
   }
+
+  const t = getTranslations(user.language as Language);
 
   // Get all template plans with exercise counts
   const allPlans = await db
@@ -60,7 +63,7 @@ export default async function PlansPage() {
           href="/"
           className="font-[family-name:var(--font-bebas)] text-2xl tracking-wider text-crimson"
         >
-          LIFTTRACK
+          {t.appName}
         </Link>
       </header>
 
@@ -68,23 +71,23 @@ export default async function PlansPage() {
       <main className="flex-1 p-6">
         <div className="max-w-2xl mx-auto">
           <h1 className="font-[family-name:var(--font-bebas)] text-4xl tracking-wide text-foreground mb-2">
-            TRAINING PLANS
+            {t.plans.title}
           </h1>
           <p className="text-bone/60 mb-8">
-            Select a plan to start your journey
+            {t.plans.selectPlanDesc}
           </p>
 
           <div className="space-y-4">
             {plansWithCounts.map((plan) => (
-              <PlanCard key={plan.id} plan={plan} />
+              <PlanCard key={plan.id} plan={plan} translations={t} />
             ))}
           </div>
 
           {plansWithCounts.length === 0 && (
             <div className="card-brutal p-8 text-center">
-              <p className="text-bone/60">No plans available yet.</p>
+              <p className="text-bone/60">{t.plans.noPlans}</p>
               <p className="text-bone/40 text-sm mt-2">
-                Run the seed script to add training plans.
+                {t.plans.runSeed}
               </p>
             </div>
           )}
@@ -95,15 +98,15 @@ export default async function PlansPage() {
       <nav className="border-t border-steel-light p-4">
         <div className="flex justify-around text-bone/60 text-sm">
           <Link href="/" className="hover:text-bone">
-            Today
+            {t.nav.today}
           </Link>
           <Link href="/history" className="hover:text-bone">
-            History
+            {t.nav.history}
           </Link>
           <Link href="/progress" className="hover:text-bone">
-            Progress
+            {t.nav.progress}
           </Link>
-          <span className="text-crimson">Plans</span>
+          <span className="text-crimson">{t.nav.plans}</span>
         </div>
       </nav>
     </div>

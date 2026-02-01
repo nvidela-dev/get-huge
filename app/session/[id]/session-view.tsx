@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logSet, endSession } from "./actions";
+import type { Translations } from "@/lib/translations";
 
 interface SessionViewProps {
   session: {
@@ -33,6 +34,7 @@ interface SessionViewProps {
     isWarmup: boolean;
   }[];
   weightUnit: string;
+  translations: Translations;
 }
 
 export function SessionView({
@@ -41,6 +43,7 @@ export function SessionView({
   exercises,
   loggedSets,
   weightUnit,
+  translations: t,
 }: SessionViewProps) {
   const router = useRouter();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -85,7 +88,7 @@ export function SessionView({
       <header className="flex items-center justify-between p-4 border-b border-steel-light">
         <div>
           <p className="text-bone/60 text-xs uppercase tracking-wider">
-            Week {session.weekNumber} • Session {session.dayInWeek}
+            {t.home.week} {session.weekNumber} • {t.home.session} {session.dayInWeek}
           </p>
           <h1 className="font-[family-name:var(--font-bebas)] text-xl tracking-wider text-crimson">
             {planDay.name.toUpperCase()}
@@ -132,6 +135,7 @@ export function SessionView({
             sets={exerciseSets}
             weightUnit={weightUnit}
             onSetLogged={() => router.refresh()}
+            translations={t}
           />
         </main>
       )}
@@ -143,7 +147,7 @@ export function SessionView({
           disabled={isEnding}
           className="w-full py-3 bg-steel border border-steel-light text-bone/80 font-[family-name:var(--font-bebas)] tracking-wider uppercase hover:bg-steel-light transition-colors disabled:opacity-50"
         >
-          {isEnding ? "ENDING..." : "END SESSION"}
+          {isEnding ? t.session.ending : t.session.endSession}
         </button>
       </footer>
     </div>
@@ -168,6 +172,7 @@ interface ExerciseCardProps {
   }[];
   weightUnit: string;
   onSetLogged: () => void;
+  translations: Translations;
 }
 
 function ExerciseCard({
@@ -176,6 +181,7 @@ function ExerciseCard({
   sets,
   weightUnit,
   onSetLogged,
+  translations: t,
 }: ExerciseCardProps) {
   const [weight, setWeight] = useState(sets[sets.length - 1]?.weight ?? "");
   const [reps, setReps] = useState(
@@ -206,7 +212,7 @@ function ExerciseCard({
           {exercise.name.toUpperCase()}
         </h2>
         <p className="text-bone/60 mt-1">
-          Target: {exercise.targetSets} × {exercise.targetReps}
+          {t.session.target}: {exercise.targetSets} × {exercise.targetReps}
           {exercise.rpeTarget && ` @ RPE ${exercise.rpeTarget}`}
         </p>
       </div>
@@ -218,7 +224,7 @@ function ExerciseCard({
             key={set.id}
             className="flex items-center justify-between bg-steel p-3 border border-steel-light"
           >
-            <span className="text-bone/60 text-sm">Set {set.setNumber}</span>
+            <span className="text-bone/60 text-sm">{t.common.set} {set.setNumber}</span>
             <span className="text-foreground font-medium">
               {set.weight} {weightUnit} × {set.reps}
             </span>
@@ -230,13 +236,13 @@ function ExerciseCard({
       {!isComplete && (
         <div className="card-brutal p-4 space-y-4">
           <p className="text-bone/60 text-xs uppercase tracking-wider text-center">
-            Set {nextSetNumber} of {exercise.targetSets}
+            {t.common.set} {nextSetNumber} {t.session.setOf} {exercise.targetSets}
           </p>
 
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block text-bone/60 text-xs uppercase tracking-wider mb-1">
-                Weight ({weightUnit})
+                {t.session.weight} ({weightUnit})
               </label>
               <input
                 type="number"
@@ -249,7 +255,7 @@ function ExerciseCard({
             </div>
             <div className="flex-1">
               <label className="block text-bone/60 text-xs uppercase tracking-wider mb-1">
-                Reps
+                {t.session.reps}
               </label>
               <input
                 type="number"
@@ -267,7 +273,7 @@ function ExerciseCard({
             disabled={!weight || !reps || isLogging}
             className="btn-brutal w-full py-3 text-lg font-[family-name:var(--font-bebas)] tracking-wider disabled:opacity-50"
           >
-            {isLogging ? "..." : "LOG SET"}
+            {isLogging ? t.session.logging : t.session.logSet}
           </button>
         </div>
       )}
@@ -275,10 +281,10 @@ function ExerciseCard({
       {isComplete && (
         <div className="text-center py-8">
           <p className="text-crimson font-[family-name:var(--font-bebas)] text-2xl tracking-wider">
-            COMPLETE
+            {t.session.complete}
           </p>
           <p className="text-bone/60 text-sm mt-2">
-            Move to the next exercise
+            {t.session.moveToNext}
           </p>
         </div>
       )}

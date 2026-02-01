@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { selectPlan } from "../actions";
+import type { Translations } from "@/lib/translations";
 
 interface Exercise {
   id: string;
@@ -28,9 +29,10 @@ interface PlanDetailViewProps {
   };
   days: Day[];
   isSelected: boolean;
+  translations: Translations;
 }
 
-export function PlanDetailView({ plan, days, isSelected }: PlanDetailViewProps) {
+export function PlanDetailView({ plan, days, isSelected, translations: t }: PlanDetailViewProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -70,8 +72,8 @@ export function PlanDetailView({ plan, days, isSelected }: PlanDetailViewProps) 
             <p className="text-bone/60 mb-4">{plan.description}</p>
           )}
           <p className="text-bone/40 text-sm">
-            {plan.daysPerWeek} sessions per week •{" "}
-            {days.reduce((sum, d) => sum + d.exercises.length, 0)} total exercises
+            {plan.daysPerWeek} {t.plans.sessionsPerWeek} •{" "}
+            {days.reduce((sum, d) => sum + d.exercises.length, 0)} {t.plans.totalExercises}
           </p>
         </div>
 
@@ -80,10 +82,10 @@ export function PlanDetailView({ plan, days, isSelected }: PlanDetailViewProps) 
           {daysWithGroupedExercises.map((day) => (
             <div key={day.id} className="card-brutal p-6">
               <h2 className="font-[family-name:var(--font-bebas)] text-2xl tracking-wide text-foreground mb-1">
-                SESSION {day.dayNumber}
+                {t.home.session} {day.dayNumber}
               </h2>
               <p className="text-bone/40 text-xs uppercase tracking-wider mb-4">
-                {day.exercises.length} exercises
+                {day.exercises.length} {t.plans.exercises}
               </p>
 
               <div className="space-y-4">
@@ -120,7 +122,7 @@ export function PlanDetailView({ plan, days, isSelected }: PlanDetailViewProps) 
               disabled={isPending}
               className="btn-brutal px-12 py-4 text-xl font-[family-name:var(--font-bebas)] tracking-widest disabled:opacity-50"
             >
-              {isPending ? "SELECTING..." : "SELECT THIS PLAN"}
+              {isPending ? t.plans.selecting : t.plans.selectThisPlan}
             </button>
           </div>
         )}

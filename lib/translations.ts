@@ -94,15 +94,22 @@ export const translations = {
     // Progress page
     progress: {
       title: "PROGRESS",
-      selectExercise: "Select exercise",
+      subtitle: "Track your gains over time",
+      selectExercise: "Select Exercise",
       maxWeight: "Max Weight",
+      max: "Max",
       bestVolume: "Best Volume",
       totalSets: "Total Sets",
       weightProgression: "Weight Progression",
       sessionVolume: "Session Volume",
       recentSets: "Recent Sets",
-      noData: "No data yet. Complete some workouts to see your progress.",
+      noData: "No data yet.",
+      noDataDesc: "Complete some sessions to see your progress.",
+      goTrain: "GO TRAIN",
       weight: "Weight",
+      volume: "Volume",
+      noSetsFor: "No sets logged for",
+      yet: "yet.",
     },
 
     // Plans page
@@ -124,12 +131,18 @@ export const translations = {
     // Session page
     session: {
       endSession: "END SESSION",
+      ending: "ENDING...",
       addNotes: "Add notes (optional)...",
       warmup: "Warmup",
       working: "Working",
       logSet: "LOG SET",
       logging: "...",
-      reps: "reps",
+      reps: "Reps",
+      weight: "Weight",
+      target: "Target",
+      complete: "COMPLETE",
+      moveToNext: "Move to the next exercise",
+      setOf: "of",
     },
 
     // Onboarding
@@ -242,15 +255,22 @@ export const translations = {
     // Progress page
     progress: {
       title: "PROGRESO",
-      selectExercise: "Seleccionar ejercicio",
+      subtitle: "Sigue tus ganancias a lo largo del tiempo",
+      selectExercise: "Seleccionar Ejercicio",
       maxWeight: "Peso Máximo",
+      max: "Máx",
       bestVolume: "Mejor Volumen",
       totalSets: "Series Totales",
       weightProgression: "Progresión de Peso",
       sessionVolume: "Volumen por Sesión",
       recentSets: "Series Recientes",
-      noData: "Aún no hay datos. Completa algunos entrenamientos para ver tu progreso.",
+      noData: "Aún no hay datos.",
+      noDataDesc: "Completa algunas sesiones para ver tu progreso.",
+      goTrain: "IR A ENTRENAR",
       weight: "Peso",
+      volume: "Volumen",
+      noSetsFor: "No hay series registradas para",
+      yet: "aún.",
     },
 
     // Plans page
@@ -272,12 +292,18 @@ export const translations = {
     // Session page
     session: {
       endSession: "TERMINAR SESIÓN",
+      ending: "TERMINANDO...",
       addNotes: "Agregar notas (opcional)...",
       warmup: "Calentamiento",
       working: "Trabajo",
       logSet: "REGISTRAR",
       logging: "...",
-      reps: "reps",
+      reps: "Reps",
+      weight: "Peso",
+      target: "Objetivo",
+      complete: "COMPLETADO",
+      moveToNext: "Pasa al siguiente ejercicio",
+      setOf: "de",
     },
 
     // Onboarding

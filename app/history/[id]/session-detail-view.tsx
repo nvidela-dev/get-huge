@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { deleteSession, deleteSet, updateSet, updateSessionNotes } from "./actions";
+import type { Translations } from "@/lib/translations";
 
 interface Set {
   id: string;
@@ -39,6 +40,7 @@ interface SessionDetailViewProps {
   totalSets: number;
   totalVolume: number;
   duration: number | null;
+  translations: Translations;
 }
 
 export function SessionDetailView({
@@ -49,6 +51,7 @@ export function SessionDetailView({
   totalSets,
   totalVolume,
   duration,
+  translations: t,
 }: SessionDetailViewProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -106,7 +109,7 @@ export function SessionDetailView({
           href="/history"
           className="text-bone/60 hover:text-bone transition-colors"
         >
-          ← Back
+          {t.nav.back}
         </Link>
         <span className="text-bone/40 text-sm">
           {format(new Date(session.startedAt), "MMMM d, yyyy")}
@@ -119,7 +122,7 @@ export function SessionDetailView({
           {/* Session header */}
           <div className="text-center mb-8">
             <p className="text-bone/60 text-xs uppercase tracking-wider">
-              Week {session.weekNumber} • Session {session.dayInWeek}
+              {t.home.week} {session.weekNumber} • {t.home.session} {session.dayInWeek}
             </p>
             <h1 className="font-[family-name:var(--font-bebas)] text-5xl tracking-wide text-foreground">
               {planDayName.toUpperCase()}
@@ -133,7 +136,7 @@ export function SessionDetailView({
                 {totalSets}
               </p>
               <p className="text-bone/60 text-xs uppercase tracking-wider">
-                Sets
+                {t.trainedToday.sets}
               </p>
             </div>
             <div className="card-brutal p-4 text-center">
@@ -141,7 +144,7 @@ export function SessionDetailView({
                 {duration ? formatDuration(duration) : "-"}
               </p>
               <p className="text-bone/60 text-xs uppercase tracking-wider">
-                Duration
+                {t.history.duration}
               </p>
             </div>
             <div className="card-brutal p-4 text-center">
@@ -149,7 +152,7 @@ export function SessionDetailView({
                 {totalVolume.toLocaleString()}
               </p>
               <p className="text-bone/60 text-xs uppercase tracking-wider">
-                Volume ({weightUnit})
+                {t.history.volume} ({weightUnit})
               </p>
             </div>
           </div>
@@ -182,7 +185,7 @@ export function SessionDetailView({
                         <p className="text-crimson font-bold">
                           {bestSet.weight} {weightUnit} × {bestSet.reps}
                         </p>
-                        <p className="text-bone/40 text-xs">Best set</p>
+                        <p className="text-bone/40 text-xs">{t.history.bestSet}</p>
                       </div>
                     )}
                   </div>
@@ -195,7 +198,7 @@ export function SessionDetailView({
                       >
                         {editingSetId === set.id ? (
                           <>
-                            <span className="text-bone/60">Set {set.setNumber}</span>
+                            <span className="text-bone/60">{t.common.set} {set.setNumber}</span>
                             <div className="flex items-center gap-2">
                               <input
                                 type="number"
@@ -215,19 +218,19 @@ export function SessionDetailView({
                                 onClick={() => handleSaveSet(set.id)}
                                 className="text-green-500 hover:text-green-400 px-2"
                               >
-                                Save
+                                {t.history.save}
                               </button>
                               <button
                                 onClick={() => setEditingSetId(null)}
                                 className="text-bone/40 hover:text-bone px-2"
                               >
-                                Cancel
+                                {t.history.cancel}
                               </button>
                             </div>
                           </>
                         ) : (
                           <>
-                            <span className="text-bone/60">Set {set.setNumber}</span>
+                            <span className="text-bone/60">{t.common.set} {set.setNumber}</span>
                             <div className="flex items-center gap-4">
                               <span className="text-bone">
                                 {set.weight} {weightUnit} × {set.reps}
@@ -237,13 +240,13 @@ export function SessionDetailView({
                                   onClick={() => startEditingSet(set)}
                                   className="text-bone/40 hover:text-bone text-xs"
                                 >
-                                  Edit
+                                  {t.history.edit}
                                 </button>
                                 <button
                                   onClick={() => handleDeleteSet(set.id)}
                                   className="text-crimson/60 hover:text-crimson text-xs"
                                 >
-                                  Delete
+                                  {t.history.delete}
                                 </button>
                               </div>
                             </div>
@@ -261,14 +264,14 @@ export function SessionDetailView({
           <div className="mt-8 card-brutal p-4">
             <div className="flex justify-between items-center mb-2">
               <p className="text-bone/60 text-xs uppercase tracking-wider">
-                Notes
+                {t.history.notes}
               </p>
               {!editingNotes && (
                 <button
                   onClick={() => setEditingNotes(true)}
                   className="text-bone/40 hover:text-bone text-xs"
                 >
-                  {session.notes ? "Edit" : "Add"}
+                  {session.notes ? t.history.edit : t.history.add}
                 </button>
               )}
             </div>
@@ -278,7 +281,7 @@ export function SessionDetailView({
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   className="w-full bg-steel-dark border border-steel-light px-3 py-2 text-bone min-h-[100px] resize-none"
-                  placeholder="Add notes about this session..."
+                  placeholder={t.session.addNotes}
                 />
                 <div className="flex gap-2">
                   <button
@@ -286,7 +289,7 @@ export function SessionDetailView({
                     disabled={savingNotes}
                     className="text-green-500 hover:text-green-400 text-sm"
                   >
-                    {savingNotes ? "Saving..." : "Save"}
+                    {savingNotes ? t.history.saving : t.history.save}
                   </button>
                   <button
                     onClick={() => {
@@ -295,20 +298,20 @@ export function SessionDetailView({
                     }}
                     className="text-bone/40 hover:text-bone text-sm"
                   >
-                    Cancel
+                    {t.history.cancel}
                   </button>
                 </div>
               </div>
             ) : (
               <p className="text-bone">
-                {session.notes || <span className="text-bone/40 italic">No notes</span>}
+                {session.notes || <span className="text-bone/40 italic">{t.history.noNotes}</span>}
               </p>
             )}
           </div>
 
           {exerciseGroups.length === 0 && (
             <div className="card-brutal p-8 text-center">
-              <p className="text-bone/60">No sets logged in this session.</p>
+              <p className="text-bone/60">{t.history.noSessions}</p>
             </div>
           )}
 
@@ -317,7 +320,7 @@ export function SessionDetailView({
             {showDeleteConfirm ? (
               <div className="card-brutal p-4 bg-crimson/10 border-crimson/30">
                 <p className="text-bone mb-4">
-                  Are you sure you want to delete this session? This cannot be undone.
+                  {t.history.confirmDelete}
                 </p>
                 <div className="flex gap-4">
                   <button
@@ -325,13 +328,13 @@ export function SessionDetailView({
                     disabled={isDeleting}
                     className="bg-crimson text-bone px-4 py-2 font-[family-name:var(--font-bebas)] tracking-wider hover:bg-crimson/80 disabled:opacity-50"
                   >
-                    {isDeleting ? "Deleting..." : "Yes, Delete"}
+                    {isDeleting ? t.history.deleting : t.history.yesDelete}
                   </button>
                   <button
                     onClick={() => setShowDeleteConfirm(false)}
                     className="text-bone/60 hover:text-bone px-4 py-2"
                   >
-                    Cancel
+                    {t.history.cancel}
                   </button>
                 </div>
               </div>
@@ -340,7 +343,7 @@ export function SessionDetailView({
                 onClick={() => setShowDeleteConfirm(true)}
                 className="text-crimson/60 hover:text-crimson text-sm"
               >
-                Delete this session
+                {t.history.deleteSession}
               </button>
             )}
           </div>

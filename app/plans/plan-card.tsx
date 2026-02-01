@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { selectPlan } from "./actions";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import type { Translations } from "@/lib/translations";
 
 interface PlanCardProps {
   plan: {
@@ -15,9 +16,10 @@ interface PlanCardProps {
     totalExercises: number;
     isSelected: boolean;
   };
+  translations: Translations;
 }
 
-export function PlanCard({ plan }: PlanCardProps) {
+export function PlanCard({ plan, translations: t }: PlanCardProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -44,7 +46,7 @@ export function PlanCard({ plan }: PlanCardProps) {
         </div>
         {plan.isSelected && (
           <span className="text-crimson text-xs uppercase tracking-wider font-bold">
-            Active
+            {t.plans.active}
           </span>
         )}
       </div>
@@ -55,14 +57,14 @@ export function PlanCard({ plan }: PlanCardProps) {
             key={day.id}
             className="bg-steel-light px-3 py-1 text-xs text-bone/80 uppercase tracking-wider"
           >
-            Session {day.dayNumber}
+            {t.home.session} {day.dayNumber}
           </span>
         ))}
       </div>
 
       <div className="flex justify-between items-center">
         <div className="text-bone/40 text-sm">
-          {plan.daysPerWeek} sessions/week • {plan.totalExercises} exercises
+          {plan.daysPerWeek} {t.plans.sessionsPerWeek} • {plan.totalExercises} {t.plans.exercises}
         </div>
 
         {!plan.isSelected && (
@@ -74,7 +76,7 @@ export function PlanCard({ plan }: PlanCardProps) {
             disabled={isPending}
             className="btn-brutal px-6 py-2 text-sm font-[family-name:var(--font-bebas)] tracking-wider disabled:opacity-50"
           >
-            {isPending ? "..." : "SELECT"}
+            {isPending ? "..." : t.plans.select}
           </button>
         )}
       </div>

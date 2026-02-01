@@ -4,6 +4,7 @@ import { eq, and } from "drizzle-orm";
 import { getOrCreateUser } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { SessionDetailView } from "./session-detail-view";
+import { getTranslations, type Language } from "@/lib/translations";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -93,6 +94,8 @@ export default async function SessionDetailPage({ params }: Props) {
     .filter((s) => !s.set.isWarmup)
     .reduce((sum, s) => sum + parseFloat(s.set.weight) * s.set.reps, 0);
 
+  const t = getTranslations(user.language as Language);
+
   return (
     <SessionDetailView
       session={{
@@ -109,6 +112,7 @@ export default async function SessionDetailPage({ params }: Props) {
       totalSets={totalSets}
       totalVolume={totalVolume}
       duration={duration}
+      translations={t}
     />
   );
 }

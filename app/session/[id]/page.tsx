@@ -10,6 +10,7 @@ import { eq, and } from "drizzle-orm";
 import { getOrCreateUser } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { SessionView } from "./session-view";
+import { getTranslations, type Language } from "@/lib/translations";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -22,6 +23,8 @@ export default async function ActiveSessionPage({ params }: Props) {
   if (!user) {
     redirect("/sign-in");
   }
+
+  const t = getTranslations(user.language as Language);
 
   // Get session with plan day info
   const sessionResults = await db
@@ -74,6 +77,7 @@ export default async function ActiveSessionPage({ params }: Props) {
       exercises={dayExercises}
       loggedSets={loggedSets}
       weightUnit={user.weightUnit}
+      translations={t}
     />
   );
 }

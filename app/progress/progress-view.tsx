@@ -13,6 +13,7 @@ import {
   Area,
 } from "recharts";
 import { format } from "date-fns";
+import type { Translations } from "@/lib/translations";
 
 interface ProgressViewProps {
   exercises: {
@@ -40,6 +41,7 @@ interface ProgressViewProps {
     totalSets: number;
   };
   weightUnit: string;
+  translations: Translations;
 }
 
 export function ProgressView({
@@ -49,6 +51,7 @@ export function ProgressView({
   exerciseData,
   stats,
   weightUnit,
+  translations: t,
 }: ProgressViewProps) {
   const router = useRouter();
 
@@ -64,7 +67,7 @@ export function ProgressView({
       {/* Exercise selector */}
       <div>
         <label className="block text-bone/60 text-xs uppercase tracking-wider mb-2">
-          Select Exercise
+          {t.progress.selectExercise}
         </label>
         <select
           value={selectedExerciseId}
@@ -88,7 +91,7 @@ export function ProgressView({
                 {stats.maxWeight}
               </p>
               <p className="text-bone/60 text-xs uppercase tracking-wider">
-                Max {weightUnit}
+                {t.progress.max} {weightUnit}
               </p>
             </div>
             <div className="card-brutal p-4 text-center">
@@ -96,7 +99,7 @@ export function ProgressView({
                 {stats.maxVolume.toLocaleString()}
               </p>
               <p className="text-bone/60 text-xs uppercase tracking-wider">
-                Best Volume
+                {t.progress.bestVolume}
               </p>
             </div>
             <div className="card-brutal p-4 text-center">
@@ -104,7 +107,7 @@ export function ProgressView({
                 {stats.totalSets}
               </p>
               <p className="text-bone/60 text-xs uppercase tracking-wider">
-                Total Sets
+                {t.progress.totalSets}
               </p>
             </div>
           </div>
@@ -114,7 +117,7 @@ export function ProgressView({
               {/* Weight progression chart */}
               <div className="card-brutal p-4">
                 <p className="text-bone/60 text-xs uppercase tracking-wider mb-4">
-                  Weight Progression ({weightUnit})
+                  {t.progress.weightProgression} ({weightUnit})
                 </p>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
@@ -146,7 +149,7 @@ export function ProgressView({
                         itemStyle={{ color: "#dc2626" }}
                         formatter={(value) => [
                           `${value ?? 0} ${weightUnit}`,
-                          "Weight",
+                          t.progress.weight,
                         ]}
                       />
                       <Line
@@ -165,7 +168,7 @@ export function ProgressView({
               {/* Volume chart */}
               <div className="card-brutal p-4">
                 <p className="text-bone/60 text-xs uppercase tracking-wider mb-4">
-                  Session Volume ({weightUnit})
+                  {t.progress.sessionVolume} ({weightUnit})
                 </p>
                 <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%">
@@ -196,7 +199,7 @@ export function ProgressView({
                         itemStyle={{ color: "#991b1b" }}
                         formatter={(value) => [
                           `${(value ?? 0).toLocaleString()} ${weightUnit}`,
-                          "Volume",
+                          t.progress.volume,
                         ]}
                       />
                       <Area
@@ -214,7 +217,7 @@ export function ProgressView({
               {/* Recent sets */}
               <div className="card-brutal p-4">
                 <p className="text-bone/60 text-xs uppercase tracking-wider mb-4">
-                  Recent Sets
+                  {t.progress.recentSets}
                 </p>
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {exerciseData
@@ -239,7 +242,7 @@ export function ProgressView({
           ) : (
             <div className="card-brutal p-8 text-center">
               <p className="text-bone/60">
-                No sets logged for {selectedExercise.name} yet.
+                {t.progress.noSetsFor} {selectedExercise.name} {t.progress.yet}
               </p>
             </div>
           )}
