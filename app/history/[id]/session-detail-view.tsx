@@ -119,7 +119,7 @@ export function SessionDetailView({
           {/* Session header */}
           <div className="text-center mb-8">
             <p className="text-bone/60 text-xs uppercase tracking-wider">
-              Week {session.weekNumber} • Day {session.dayInWeek}
+              Week {session.weekNumber} • Session {session.dayInWeek}
             </p>
             <h1 className="font-[family-name:var(--font-bebas)] text-5xl tracking-wide text-foreground">
               {planDayName.toUpperCase()}

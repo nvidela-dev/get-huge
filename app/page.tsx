@@ -156,7 +156,7 @@ function TodaysWorkoutView({
           {workout.dayName.toUpperCase()}
         </h2>
         <p className="text-bone/60 text-sm">
-          Week {workout.weekNumber} • Day {workout.dayNumber}
+          Week {workout.weekNumber} • Session {workout.dayNumber}
         </p>
       </div>
 
@@ -291,6 +291,8 @@ function ReadyToTrainView({
     return acc;
   }, {} as Record<string, typeof trainingDay.exercises>);
 
+  const muscleGroups = Object.entries(exercisesByMuscle);
+
   return (
     <div className="text-center space-y-8">
       {/* Greeting */}
@@ -298,13 +300,13 @@ function ReadyToTrainView({
         {userName ? `Let's go, ${userName}` : "Let's go"}
       </p>
 
-      {/* Day indicator */}
+      {/* Session indicator */}
       <div className="space-y-2">
         <p className="text-bone/60 uppercase tracking-widest text-sm">
-          Week {trainingDay.weekNumber} • Day {trainingDay.dayNumber}
+          Week {trainingDay.weekNumber}
         </p>
         <h2 className="font-[family-name:var(--font-bebas)] text-6xl sm:text-7xl tracking-wide text-foreground">
-          {trainingDay.dayName.toUpperCase()}
+          SESSION {trainingDay.dayNumber}
         </h2>
       </div>
 
@@ -316,21 +318,21 @@ function ReadyToTrainView({
         START SESSION
       </Link>
 
-      {/* Exercise preview */}
-      <div className="card-brutal p-6 max-w-sm mx-auto mt-8">
+      {/* Exercise preview - two columns */}
+      <div className="card-brutal p-6 max-w-lg mx-auto mt-8">
         <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
           Today&apos;s Lifts
         </p>
-        <div className="space-y-4 text-left">
-          {Object.entries(exercisesByMuscle).map(([muscleGroup, exercises]) => (
+        <div className="grid grid-cols-2 gap-4 text-left">
+          {muscleGroups.map(([muscleGroup, exercises]) => (
             <div key={muscleGroup}>
               <p className="text-crimson text-xs uppercase tracking-wider mb-1">
                 {muscleGroup}
               </p>
-              <ul className="space-y-1 text-bone/80">
+              <ul className="space-y-1 text-bone/80 text-sm">
                 {exercises.map((ex) => (
                   <li key={ex.id}>
-                    • {ex.name} — {ex.targetSets}×{ex.targetReps}
+                    {ex.name}
                   </li>
                 ))}
               </ul>
