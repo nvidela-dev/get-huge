@@ -1,30 +1,62 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #f5f5f5;
-  --crimson: #dc2626;
-  --crimson-dark: #991b1b;
-  --crimson-light: #ef4444;
-  --blood: #7f1d1d;
-  --steel: #1c1c1c;
-  --steel-light: #262626;
-  --bone: #d4d4d4;
+  /* Elden Ring inspired color palette */
+  --background: #0d0d0d;
+  --background-alt: #1a1816;
+  --foreground: #e8e2d6;
+
+  /* Gold/Amber accents */
+  --gold: #c9a227;
+  --gold-light: #d4b84a;
+  --gold-dark: #8b7355;
+  --gold-muted: #6b5c3e;
+
+  /* Warm earth tones */
+  --parchment: #e8e2d6;
+  --parchment-dark: #b8a88a;
+  --ash: #3d3a36;
+  --ember: #8b4513;
+
+  /* Accent colors */
+  --blood: #6b1c1c;
+  --grace: #c9a227;
+
+  /* UI colors */
+  --border: #2a2520;
+  --border-light: #3d3830;
+  --muted: #6b6560;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-alt: var(--background-alt);
   --color-foreground: var(--foreground);
-  --color-crimson: var(--crimson);
-  --color-crimson-dark: var(--crimson-dark);
-  --color-crimson-light: var(--crimson-light);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-gold-muted: var(--gold-muted);
+  --color-parchment: var(--parchment);
+  --color-parchment-dark: var(--parchment-dark);
+  --color-ash: var(--ash);
+  --color-ember: var(--ember);
   --color-blood: var(--blood);
-  --color-steel: var(--steel);
-  --color-steel-light: var(--steel-light);
-  --color-bone: var(--bone);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-bebas);
+  --color-grace: var(--grace);
+  --color-border: var(--border);
+  --color-border-light: var(--border-light);
+  --color-muted: var(--muted);
+
+  /* Legacy color mappings for compatibility */
+  --color-crimson: var(--gold);
+  --color-crimson-dark: var(--gold-dark);
+  --color-crimson-light: var(--gold-light);
+  --color-steel: var(--background-alt);
+  --color-steel-light: var(--border);
+  --color-bone: var(--parchment);
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-cinzel);
+  --font-decorative: var(--font-cinzel-decorative);
 }
 
 body {
@@ -33,51 +65,139 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Baki aesthetic - aggressive, raw */
+/* Elden Ring aesthetic - elegant, ancient, mysterious */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Sharp edges, no soft rounded corners */
+/* Ornate button style */
 .btn-brutal {
-  @apply bg-crimson text-white font-bold uppercase tracking-wider;
-  @apply border-2 border-crimson-light;
-  @apply hover:bg-crimson-light hover:border-white;
-  @apply active:bg-crimson-dark active:scale-95;
-  @apply transition-all duration-150;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  @apply bg-transparent text-gold font-semibold uppercase tracking-widest;
+  @apply border border-gold/60;
+  @apply hover:bg-gold/10 hover:border-gold hover:text-gold-light;
+  @apply active:bg-gold/20;
+  @apply transition-all duration-200;
+  font-family: var(--font-cinzel), serif;
+  position: relative;
 }
 
-/* Subtle noise texture */
-.texture-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.03;
-}
-
-/* Cards with brutal edges */
-.card-brutal {
-  @apply bg-steel border border-steel-light;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
-}
-
-/* Text glow for emphasis */
-.text-glow {
-  text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
-}
-
-/* Aggressive scrollbar */
-::-webkit-scrollbar {
+.btn-brutal::before,
+.btn-brutal::after {
+  content: '';
+  position: absolute;
   width: 8px;
+  height: 8px;
+  border: 1px solid var(--gold);
+  opacity: 0.6;
+}
+
+.btn-brutal::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.btn-brutal::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Ornate card style - like Elden Ring menu panels */
+.card-brutal {
+  @apply bg-background-alt/80 border border-border;
+  position: relative;
+  backdrop-filter: blur(4px);
+}
+
+.card-brutal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, var(--gold-muted) 0%, transparent 50%, var(--gold-muted) 100%) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Corner decorations for cards */
+.card-brutal::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 1px solid var(--border-light);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Text glow for emphasis - golden glow */
+.text-glow {
+  text-shadow: 0 0 20px rgba(201, 162, 39, 0.4);
+}
+
+/* Elegant scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--steel);
+  background: var(--background-alt);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--crimson-dark);
+  background: var(--gold-dark);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--crimson);
+  background: var(--gold);
+}
+
+/* Override font-family for headings */
+h1, h2, h3, h4, h5, h6,
+.font-\[family-name\:var\(--font-bebas\)\] {
+  font-family: var(--font-cinzel), serif !important;
+  letter-spacing: 0.05em;
+}
+
+/* Input styling */
+input, select, textarea {
+  @apply bg-background-alt border-border focus:border-gold/60 focus:outline-none;
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* Subtle vignette effect on main containers */
+.min-h-screen {
+  background:
+    radial-gradient(ellipse at top, transparent 0%, var(--background) 70%),
+    radial-gradient(ellipse at bottom, rgba(139, 115, 85, 0.05) 0%, transparent 50%),
+    var(--background);
+}
+
+/* Navigation border styling */
+nav.border-t {
+  border-image: linear-gradient(90deg, transparent 0%, var(--gold-muted) 50%, transparent 100%) 1;
+}
+
+header.border-b {
+  border-image: linear-gradient(90deg, transparent 0%, var(--gold-muted) 50%, transparent 100%) 1;
+}
+
+/* Green for success states - muted to fit theme */
+.text-green-500 {
+  color: #7c9a5e !important;
+}
+
+/* Amber for warnings - fits the golden theme */
+.text-amber-500 {
+  color: var(--gold) !important;
 }

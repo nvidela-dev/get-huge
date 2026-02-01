@@ -3,7 +3,7 @@ export type Language = "en" | "es";
 export const translations = {
   en: {
     // App name
-    appName: "LIFTTRACK",
+    appName: "GET HUGE",
 
     // Navigation
     nav: {
@@ -174,7 +174,7 @@ export const translations = {
 
   es: {
     // App name
-    appName: "LIFTTRACK",
+    appName: "GET HUGE",
 
     // Navigation
     nav: {

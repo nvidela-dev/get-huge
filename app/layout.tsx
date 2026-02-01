@@ -1,33 +1,34 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Bebas_Neue } from "next/font/google";
+import { Cinzel, Cinzel_Decorative, Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const bebasNeue = Bebas_Neue({
-  variable: "--font-bebas",
-  weight: "400",
+const cinzelDecorative = Cinzel_Decorative({
+  variable: "--font-cinzel-decorative",
   subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "LiftTrack",
-  description: "Track your lifts. Get huge.",
+  title: "Get Huge",
+  description: "Become the Elden Lord of Gains",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "LiftTrack",
+    title: "Get Huge",
   },
   icons: {
     icon: "/icons/icon.svg",
@@ -40,7 +41,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#0a0a0a",
+  themeColor: "#0d0d0d",
 };
 
 export default function RootLayout({
@@ -53,16 +54,16 @@ export default function RootLayout({
       appearance={{
         baseTheme: dark,
         variables: {
-          colorPrimary: "#dc2626",
-          colorBackground: "#0a0a0a",
-          colorInputBackground: "#1c1c1c",
-          colorInputText: "#f5f5f5",
+          colorPrimary: "#c9a227",
+          colorBackground: "#0d0d0d",
+          colorInputBackground: "#1a1816",
+          colorInputText: "#e8e2d6",
         },
       }}
     >
       <html lang="en" className="dark">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} antialiased bg-background text-foreground min-h-screen`}
+          className={`${inter.variable} ${cinzel.variable} ${cinzelDecorative.variable} antialiased bg-background text-foreground min-h-screen`}
         >
           {children}
         </body>
