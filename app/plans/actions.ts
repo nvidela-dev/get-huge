@@ -3,23 +3,25 @@
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { getOrCreateUser } from "@/lib/auth";
+import { getAdminUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function selectPlan(planId: string) {
-  const user = await getOrCreateUser();
+  // Only admin can select plans
+  const admin = await getAdminUser();
 
-  if (!user) {
-    throw new Error("Not authenticated");
+  if (!admin) {
+    throw new Error("Unauthorized");
   }
 
+  // Admin selects for themselves
   await db
     .update(users)
     .set({
       currentPlanId: planId,
       planStartDate: new Date().toISOString().split("T")[0],
     })
-    .where(eq(users.id, user.id));
+    .where(eq(users.id, admin.id));
 
   revalidatePath("/");
   revalidatePath("/plans");

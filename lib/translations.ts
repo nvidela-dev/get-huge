@@ -169,6 +169,17 @@ export const translations = {
       saving: "Saving...",
     },
 
+    // Admin/Backoffice
+    admin: {
+      title: "BACKOFFICE",
+      users: "Users",
+      assignPlan: "Assign Plan",
+      noPlan: "No plan",
+      assign: "Assign",
+      remove: "Remove",
+      userCount: "users",
+    },
+
     // Common
     common: {
       loading: "Loading...",
@@ -343,6 +354,17 @@ export const translations = {
       languageDesc: "Elige tu idioma preferido",
       saved: "¡Guardado!",
       saving: "Guardando...",
+    },
+
+    // Admin/Backoffice
+    admin: {
+      title: "BACKOFFICE",
+      users: "Usuarios",
+      assignPlan: "Asignar Plan",
+      noPlan: "Sin plan",
+      assign: "Asignar",
+      remove: "Quitar",
+      userCount: "usuarios",
     },
 
     // Common

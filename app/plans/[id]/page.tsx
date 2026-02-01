@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { plans, planDays, planDayExercises, exercises } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { getOrCreateUser } from "@/lib/auth";
+import { getOrCreateUser, isAdmin } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { PlanDetailView } from "./plan-detail-view";
@@ -97,6 +97,7 @@ export default async function PlanDetailPage({ params }: Props) {
         }}
         days={daysWithExercises}
         isSelected={isSelected}
+        canSelect={isAdmin(user.email)}
         translations={t}
       />
 

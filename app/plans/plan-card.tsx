@@ -17,9 +17,10 @@ interface PlanCardProps {
     isSelected: boolean;
   };
   translations: Translations;
+  canSelect?: boolean;
 }
 
-export function PlanCard({ plan, translations: t }: PlanCardProps) {
+export function PlanCard({ plan, translations: t, canSelect = false }: PlanCardProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -67,7 +68,7 @@ export function PlanCard({ plan, translations: t }: PlanCardProps) {
           {plan.daysPerWeek} {t.plans.sessionsPerWeek} • {plan.totalExercises} {t.plans.exercises}
         </div>
 
-        {!plan.isSelected && (
+        {canSelect && !plan.isSelected && (
           <button
             onClick={(e) => {
               e.preventDefault();

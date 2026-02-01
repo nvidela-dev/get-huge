@@ -1,4 +1,4 @@
-import { getOrCreateUser } from "@/lib/auth";
+import { getOrCreateUser, isAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { SettingsView } from "./settings-view";
@@ -36,6 +36,23 @@ export default async function SettingsPage() {
             currentLanguage={user.language as Language}
             translations={t}
           />
+
+          {/* Admin link */}
+          {isAdmin(user.email) && (
+            <div className="mt-8 pt-8 border-t border-steel-light">
+              <Link
+                href="/admin"
+                className="card-brutal p-4 block hover:border-crimson/50 transition-colors"
+              >
+                <p className="font-[family-name:var(--font-bebas)] text-xl tracking-wide text-crimson">
+                  {t.admin.title}
+                </p>
+                <p className="text-bone/40 text-sm">
+                  Manage users and assign plans
+                </p>
+              </Link>
+            </div>
+          )}
         </div>
       </main>
 

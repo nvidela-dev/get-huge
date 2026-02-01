@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { plans, planDays, planDayExercises } from "@/lib/db/schema";
 import { eq, count } from "drizzle-orm";
-import { getOrCreateUser } from "@/lib/auth";
+import { getOrCreateUser, isAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { PlanCard } from "./plan-card";
@@ -79,7 +79,7 @@ export default async function PlansPage() {
 
           <div className="space-y-4">
             {plansWithCounts.map((plan) => (
-              <PlanCard key={plan.id} plan={plan} translations={t} />
+              <PlanCard key={plan.id} plan={plan} translations={t} canSelect={isAdmin(user.email)} />
             ))}
           </div>
 

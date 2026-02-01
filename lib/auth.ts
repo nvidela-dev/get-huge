@@ -53,3 +53,17 @@ export async function getCurrentUser() {
 
   return existingUsers[0] ?? null;
 }
+
+const ADMIN_EMAIL = "videla.jn@gmail.com";
+
+export function isAdmin(email: string): boolean {
+  return email === ADMIN_EMAIL;
+}
+
+export async function getAdminUser() {
+  const user = await getOrCreateUser();
+  if (!user || !isAdmin(user.email)) {
+    return null;
+  }
+  return user;
+}

@@ -29,10 +29,11 @@ interface PlanDetailViewProps {
   };
   days: Day[];
   isSelected: boolean;
+  canSelect?: boolean;
   translations: Translations;
 }
 
-export function PlanDetailView({ plan, days, isSelected, translations: t }: PlanDetailViewProps) {
+export function PlanDetailView({ plan, days, isSelected, canSelect = false, translations: t }: PlanDetailViewProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -114,8 +115,8 @@ export function PlanDetailView({ plan, days, isSelected, translations: t }: Plan
           ))}
         </div>
 
-        {/* Select button */}
-        {!isSelected && (
+        {/* Select button - admin only */}
+        {canSelect && !isSelected && (
           <div className="text-center">
             <button
               onClick={handleSelect}

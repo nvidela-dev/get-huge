@@ -26,7 +26,15 @@
       "Bash(git commit:*)",
       "Bash(gh pr merge:*)",
       "Bash(git pull:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(curl:*)",
+      "Bash(npm run build:*)",
+      "Bash(git rm:*)",
+      "Bash(tree:*)",
+      "Bash(npx dotenv:*)",
+      "Bash(node -e:*)",
+      "Bash(find:*)",
+      "Bash(git diff:*)"
     ]
   }
 }
