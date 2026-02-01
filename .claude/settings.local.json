@@ -9,7 +9,20 @@
       "Bash(npm run lint:*)",
       "Bash(git checkout:*)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: project scaffolding with Next.js 14, Clerk, Drizzle\n\nSet up LiftTrack foundation:\n- Next.js 14 with App Router and TypeScript\n- Tailwind CSS with Baki Hanma aesthetic \\(dark theme, crimson accents\\)\n- Clerk auth with middleware and sign-in/sign-up pages\n- Drizzle ORM with Neon Postgres schema\n- Database schema for users, plans, exercises, sessions, sets\n- Sample PPL plan in JSON format\n- Placeholder home page demonstrating design direction\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: project scaffolding with Next.js 14, Clerk, Drizzle\n\nSet up LiftTrack foundation:\n- Next.js 14 with App Router and TypeScript\n- Tailwind CSS with Baki Hanma aesthetic \\(dark theme, crimson accents\\)\n- Clerk auth with middleware and sign-in/sign-up pages\n- Drizzle ORM with Neon Postgres schema\n- Database schema for users, plans, exercises, sessions, sets\n- Sample PPL plan in JSON format\n- Placeholder home page demonstrating design direction\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)",
+      "Bash(git branch:*)",
+      "Bash(gh repo edit:*)",
+      "Bash(ls:*)",
+      "Bash(open \"https://dashboard.clerk.com\")",
+      "Bash(open \"https://console.neon.tech\")",
+      "Bash(git check-ignore:*)",
+      "Bash(npm run db:push:*)",
+      "Bash(source .env.local)",
+      "Bash(DATABASE_URL=\"$DATABASE_URL\" npm run db:push:*)",
+      "Bash(open http://localhost:3000)",
+      "Bash(npm run db:seed:*)"
     ]
   }
 }
