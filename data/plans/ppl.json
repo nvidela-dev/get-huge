@@ -1,0 +1,146 @@
+{
+  "name": "Push Pull Legs",
+  "description": "Classic 3-day split focusing on pushing movements, pulling movements, and legs",
+  "totalWeeks": null,
+  "daysPerWeek": 3,
+  "days": [
+    {
+      "dayNumber": 1,
+      "name": "Push",
+      "exercises": [
+        {
+          "name": "Bench Press",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "6-8",
+          "rpeTarget": 8
+        },
+        {
+          "name": "Overhead Press",
+          "muscleGroup": "shoulders",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "8-10",
+          "rpeTarget": 8
+        },
+        {
+          "name": "Incline Dumbbell Press",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Tricep Pushdown",
+          "muscleGroup": "triceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "12-15",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Lateral Raises",
+          "muscleGroup": "shoulders",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "15-20",
+          "rpeTarget": 7
+        }
+      ]
+    },
+    {
+      "dayNumber": 2,
+      "name": "Pull",
+      "exercises": [
+        {
+          "name": "Barbell Row",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "6-8",
+          "rpeTarget": 8
+        },
+        {
+          "name": "Pull-ups",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "6-10",
+          "rpeTarget": 8
+        },
+        {
+          "name": "Face Pulls",
+          "muscleGroup": "rear delts",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "15-20",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Barbell Curl",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Hammer Curls",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "12-15",
+          "rpeTarget": 7
+        }
+      ]
+    },
+    {
+      "dayNumber": 3,
+      "name": "Legs",
+      "exercises": [
+        {
+          "name": "Squat",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "6-8",
+          "rpeTarget": 8
+        },
+        {
+          "name": "Romanian Deadlift",
+          "muscleGroup": "hamstrings",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "8-10",
+          "rpeTarget": 8
+        },
+        {
+          "name": "Leg Press",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Leg Curl",
+          "muscleGroup": "hamstrings",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "12-15",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Calf Raises",
+          "muscleGroup": "calves",
+          "isCompound": false,
+          "targetSets": 4,
+          "targetReps": "15-20",
+          "rpeTarget": 7
+        }
+      ]
+    }
+  ]
+}

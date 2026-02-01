@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yes:*)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm run lint:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: project scaffolding with Next.js 14, Clerk, Drizzle\n\nSet up LiftTrack foundation:\n- Next.js 14 with App Router and TypeScript\n- Tailwind CSS with Baki Hanma aesthetic \\(dark theme, crimson accents\\)\n- Clerk auth with middleware and sign-in/sign-up pages\n- Drizzle ORM with Neon Postgres schema\n- Database schema for users, plans, exercises, sessions, sets\n- Sample PPL plan in JSON format\n- Placeholder home page demonstrating design direction\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}
