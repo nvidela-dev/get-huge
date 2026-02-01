@@ -22,6 +22,7 @@ interface SessionViewProps {
     muscleGroup: string;
     targetSets: number;
     targetReps: string;
+    defaultReps: number;
     rpeTarget: string | null;
     order: number;
   }[];
@@ -33,6 +34,7 @@ interface SessionViewProps {
     reps: number;
     isWarmup: boolean;
   }[];
+  lastWeights: Record<string, string>;
   weightUnit: string;
   translations: Translations;
 }
@@ -42,6 +44,7 @@ export function SessionView({
   planDay,
   exercises,
   loggedSets,
+  lastWeights,
   weightUnit,
   translations: t,
 }: SessionViewProps) {
@@ -133,6 +136,7 @@ export function SessionView({
             sessionId={session.id}
             exercise={currentExercise}
             sets={exerciseSets}
+            lastWeight={lastWeights[currentExercise.id]}
             weightUnit={weightUnit}
             onSetLogged={() => router.refresh()}
             translations={t}
@@ -162,6 +166,7 @@ interface ExerciseCardProps {
     muscleGroup: string;
     targetSets: number;
     targetReps: string;
+    defaultReps: number;
     rpeTarget: string | null;
   };
   sets: {
@@ -170,6 +175,7 @@ interface ExerciseCardProps {
     weight: string;
     reps: number;
   }[];
+  lastWeight?: string;
   weightUnit: string;
   onSetLogged: () => void;
   translations: Translations;
@@ -179,15 +185,36 @@ function ExerciseCard({
   sessionId,
   exercise,
   sets,
+  lastWeight,
   weightUnit,
   onSetLogged,
   translations: t,
 }: ExerciseCardProps) {
-  const [weight, setWeight] = useState(sets[sets.length - 1]?.weight ?? "");
-  const [reps, setReps] = useState(
-    sets[sets.length - 1]?.reps?.toString() ?? ""
-  );
+  // Weight priority: 1) last set in current session, 2) last logged weight from history, 3) empty
+  const getDefaultWeight = () => {
+    if (sets.length > 0) {
+      return sets[sets.length - 1].weight;
+    }
+    return lastWeight ?? "";
+  };
+
+  // Reps priority: 1) last set in current session, 2) defaultReps from plan
+  const getDefaultReps = () => {
+    if (sets.length > 0) {
+      return sets[sets.length - 1].reps.toString();
+    }
+    return exercise.defaultReps.toString();
+  };
+
+  const [weight, setWeight] = useState(getDefaultWeight);
+  const [reps, setReps] = useState(getDefaultReps);
   const [isLogging, setIsLogging] = useState(false);
+
+  // Update defaults when switching exercises or after logging a set
+  useEffect(() => {
+    setWeight(getDefaultWeight());
+    setReps(getDefaultReps());
+  }, [exercise.id, sets.length]);
 
   const nextSetNumber = sets.length + 1;
   const isComplete = sets.length >= exercise.targetSets;

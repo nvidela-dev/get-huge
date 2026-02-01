@@ -6,7 +6,7 @@ import {
   exercises,
   sessionSets,
 } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc, ne } from "drizzle-orm";
 import { getOrCreateUser } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { SessionView } from "./session-view";
@@ -56,6 +56,7 @@ export default async function ActiveSessionPage({ params }: Props) {
       muscleGroup: exercises.muscleGroup,
       targetSets: planDayExercises.targetSets,
       targetReps: planDayExercises.targetReps,
+      defaultReps: planDayExercises.defaultReps,
       rpeTarget: planDayExercises.rpeTarget,
       order: planDayExercises.order,
     })
@@ -63,6 +64,32 @@ export default async function ActiveSessionPage({ params }: Props) {
     .innerJoin(exercises, eq(planDayExercises.exerciseId, exercises.id))
     .where(eq(planDayExercises.planDayId, result.planDay.id))
     .orderBy(planDayExercises.order);
+
+  // Get last weights for each exercise from previous sessions
+  const exerciseIds = dayExercises.map((e) => e.id);
+  const lastWeights: Record<string, string> = {};
+
+  for (const exerciseId of exerciseIds) {
+    // Get the most recent set for this exercise from a previous session
+    const lastSet = await db
+      .select({ weight: sessionSets.weight })
+      .from(sessionSets)
+      .innerJoin(sessions, eq(sessionSets.sessionId, sessions.id))
+      .where(
+        and(
+          eq(sessionSets.exerciseId, exerciseId),
+          eq(sessions.userId, user.id),
+          ne(sessionSets.sessionId, id), // Exclude current session
+          eq(sessionSets.isWarmup, false)
+        )
+      )
+      .orderBy(desc(sessionSets.createdAt))
+      .limit(1);
+
+    if (lastSet[0]) {
+      lastWeights[exerciseId] = lastSet[0].weight;
+    }
+  }
 
   // Get logged sets for this session
   const loggedSets = await db
@@ -76,6 +103,7 @@ export default async function ActiveSessionPage({ params }: Props) {
       planDay={result.planDay}
       exercises={dayExercises}
       loggedSets={loggedSets}
+      lastWeights={lastWeights}
       weightUnit={user.weightUnit}
       translations={t}
     />

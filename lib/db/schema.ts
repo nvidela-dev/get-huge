@@ -65,6 +65,7 @@ export const planDayExercises = pgTable("plan_day_exercises", {
   order: integer("order").notNull(),
   targetSets: integer("target_sets").notNull(),
   targetReps: text("target_reps").notNull(), // "5" or "8-12"
+  defaultReps: integer("default_reps").default(8).notNull(),
   rpeTarget: decimal("rpe_target", { precision: 3, scale: 1 }),
 });
 
