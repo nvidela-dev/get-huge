@@ -22,7 +22,11 @@
       "Bash(source .env.local)",
       "Bash(DATABASE_URL=\"$DATABASE_URL\" npm run db:push:*)",
       "Bash(open http://localhost:3000)",
-      "Bash(npm run db:seed:*)"
+      "Bash(npm run db:seed:*)",
+      "Bash(git commit:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
     ]
   }
 }
