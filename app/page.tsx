@@ -47,7 +47,9 @@ export default async function Home() {
       <nav className="border-t border-steel-light p-4">
         <div className="flex justify-around text-bone/60 text-sm">
           <span className="text-crimson">Today</span>
-          <span>History</span>
+          <Link href="/history" className="hover:text-bone">
+            History
+          </Link>
           <span>Progress</span>
           <Link href="/plans" className="hover:text-bone">
             Plans

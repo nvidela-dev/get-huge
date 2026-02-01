@@ -97,7 +97,9 @@ export default async function PlansPage() {
           <Link href="/" className="hover:text-bone">
             Today
           </Link>
-          <span>History</span>
+          <Link href="/history" className="hover:text-bone">
+            History
+          </Link>
           <span>Progress</span>
           <span className="text-crimson">Plans</span>
         </div>
