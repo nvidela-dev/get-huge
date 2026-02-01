@@ -42,6 +42,9 @@ export default async function Home() {
         {status.type === "week_complete" && (
           <WeekCompleteView sessionsThisWeek={status.sessionsThisWeek ?? 3} t={t} />
         )}
+        {status.type === "session_in_progress" && status.inProgressSession && (
+          <SessionInProgressView session={status.inProgressSession} t={t} />
+        )}
         {status.type === "trained_today" && status.todaysWorkout && (
           <TodaysWorkoutView workout={status.todaysWorkout} t={t} />
         )}
@@ -70,6 +73,70 @@ export default async function Home() {
           </Link>
         </div>
       </nav>
+    </div>
+  );
+}
+
+function SessionInProgressView({
+  session,
+  t,
+}: {
+  session: {
+    sessionId: string;
+    dayName: string;
+    weekNumber: number;
+    dayNumber: number;
+    startedAt: Date;
+    totalSets: number;
+  };
+  t: Translations;
+}) {
+  const duration = intervalToDuration({
+    start: session.startedAt,
+    end: new Date(),
+  });
+  const formattedDuration = formatDuration(duration, {
+    format: ["hours", "minutes"],
+    zero: false,
+  }) || "< 1 min";
+
+  return (
+    <div className="text-center space-y-8">
+      <div className="space-y-2">
+        <p className="text-amber-500 uppercase tracking-widest text-sm animate-pulse">
+          {t.history.inProgress}
+        </p>
+        <h2 className="font-[family-name:var(--font-bebas)] text-5xl sm:text-6xl tracking-wide text-foreground">
+          {session.dayName.toUpperCase()}
+        </h2>
+        <p className="text-bone/60 text-sm">
+          {t.home.week} {session.weekNumber} • {t.home.session} {session.dayNumber}
+        </p>
+      </div>
+
+      <div className="card-brutal p-6 max-w-sm mx-auto">
+        <div className="flex justify-around mb-4">
+          <div>
+            <p className="text-3xl font-[family-name:var(--font-bebas)] text-crimson">
+              {session.totalSets}
+            </p>
+            <p className="text-bone/60 text-xs uppercase">{t.trainedToday.sets}</p>
+          </div>
+          <div>
+            <p className="text-3xl font-[family-name:var(--font-bebas)] text-crimson">
+              {formattedDuration}
+            </p>
+            <p className="text-bone/60 text-xs uppercase">{t.trainedToday.duration}</p>
+          </div>
+        </div>
+      </div>
+
+      <Link
+        href={`/session/${session.sessionId}`}
+        className="btn-brutal inline-block px-12 py-4 text-xl font-[family-name:var(--font-bebas)] tracking-widest"
+      >
+        {t.history.continue}
+      </Link>
     </div>
   );
 }

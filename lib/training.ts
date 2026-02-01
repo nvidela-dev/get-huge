@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { sessions, users, planDays, planDayExercises, exercises, sessionSets } from "@/lib/db/schema";
-import { eq, and, gte, lte, lt, isNotNull, count, desc } from "drizzle-orm";
+import { eq, and, gte, lte, lt, isNotNull, isNull, count, desc } from "drizzle-orm";
 import { startOfWeek, endOfWeek, differenceInDays, startOfDay, endOfDay, subDays } from "date-fns";
 
 interface TrainingDay {
@@ -32,11 +32,21 @@ interface TodaysWorkout {
   }[];
 }
 
+interface InProgressSession {
+  sessionId: string;
+  dayName: string;
+  weekNumber: number;
+  dayNumber: number;
+  startedAt: Date;
+  totalSets: number;
+}
+
 interface TrainingStatus {
-  type: "ready" | "week_complete" | "no_plan" | "trained_today" | "recovery_day";
+  type: "ready" | "week_complete" | "no_plan" | "trained_today" | "recovery_day" | "session_in_progress";
   trainingDay?: TrainingDay;
   sessionsThisWeek?: number;
   todaysWorkout?: TodaysWorkout;
+  inProgressSession?: InProgressSession;
 }
 
 export async function getTrainingStatus(userId: string): Promise<TrainingStatus> {
@@ -59,6 +69,56 @@ export async function getTrainingStatus(userId: string): Promise<TrainingStatus>
   const yesterday = subDays(today, 1);
   const yesterdayStart = startOfDay(yesterday);
   const yesterdayEnd = endOfDay(yesterday);
+
+  // Check for in-progress session (started but not ended)
+  const inProgressResults = await db
+    .select({
+      id: sessions.id,
+      weekNumber: sessions.weekNumber,
+      dayInWeek: sessions.dayInWeek,
+      startedAt: sessions.startedAt,
+      planDayId: sessions.planDayId,
+    })
+    .from(sessions)
+    .where(
+      and(
+        eq(sessions.userId, userId),
+        gte(sessions.startedAt, todayStart),
+        lte(sessions.startedAt, todayEnd),
+        isNull(sessions.endedAt)
+      )
+    )
+    .orderBy(desc(sessions.startedAt))
+    .limit(1);
+
+  const inProgressSession = inProgressResults[0];
+
+  if (inProgressSession) {
+    // Get the plan day name
+    const planDayResult = await db
+      .select({ name: planDays.name })
+      .from(planDays)
+      .where(eq(planDays.id, inProgressSession.planDayId))
+      .limit(1);
+
+    // Get total sets logged so far
+    const setsResult = await db
+      .select({ count: count() })
+      .from(sessionSets)
+      .where(eq(sessionSets.sessionId, inProgressSession.id));
+
+    return {
+      type: "session_in_progress",
+      inProgressSession: {
+        sessionId: inProgressSession.id,
+        dayName: planDayResult[0]?.name ?? "Workout",
+        weekNumber: inProgressSession.weekNumber,
+        dayNumber: inProgressSession.dayInWeek,
+        startedAt: inProgressSession.startedAt,
+        totalSets: setsResult[0]?.count ?? 0,
+      },
+    };
+  }
 
   // Check for completed session today
   const todaySessionResults = await db
