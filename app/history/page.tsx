@@ -160,7 +160,9 @@ export default async function HistoryPage() {
             Today
           </Link>
           <span className="text-crimson">History</span>
-          <span>Progress</span>
+          <Link href="/progress" className="hover:text-bone">
+            Progress
+          </Link>
           <Link href="/plans" className="hover:text-bone">
             Plans
           </Link>

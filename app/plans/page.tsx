@@ -100,7 +100,9 @@ export default async function PlansPage() {
           <Link href="/history" className="hover:text-bone">
             History
           </Link>
-          <span>Progress</span>
+          <Link href="/progress" className="hover:text-bone">
+            Progress
+          </Link>
           <span className="text-crimson">Plans</span>
         </div>
       </nav>
