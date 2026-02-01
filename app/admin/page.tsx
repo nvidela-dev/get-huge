@@ -63,21 +63,55 @@ export default async function AdminPage() {
 
       {/* Main Content */}
       <main className="flex-1 p-6">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="font-[family-name:var(--font-bebas)] text-3xl tracking-wide text-foreground">
-              {t.admin.users}
-            </h2>
-            <span className="text-bone/40 text-sm">
-              {allUsers.length} {t.admin.userCount}
-            </span>
-          </div>
+        <div className="max-w-2xl mx-auto space-y-12">
+          {/* Plans Section */}
+          <section>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="font-[family-name:var(--font-bebas)] text-3xl tracking-wide text-foreground">
+                {t.admin.plans}
+              </h2>
+              <span className="text-bone/40 text-sm">
+                {allPlans.length} {t.admin.planCount}
+              </span>
+            </div>
 
-          <AdminUserList
-            users={usersWithPlans}
-            plans={allPlans}
-            translations={t}
-          />
+            <div className="space-y-3">
+              {allPlans.map((plan) => (
+                <Link
+                  key={plan.id}
+                  href={`/admin/plans/${plan.id}`}
+                  className="card-brutal p-4 block hover:border-crimson/50 transition-colors"
+                >
+                  <div className="flex justify-between items-center">
+                    <p className="font-[family-name:var(--font-bebas)] text-xl tracking-wide text-foreground">
+                      {plan.name.toUpperCase()}
+                    </p>
+                    <span className="text-bone/40 text-sm">
+                      {t.admin.editPlan} →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* Users Section */}
+          <section>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="font-[family-name:var(--font-bebas)] text-3xl tracking-wide text-foreground">
+                {t.admin.users}
+              </h2>
+              <span className="text-bone/40 text-sm">
+                {allUsers.length} {t.admin.userCount}
+              </span>
+            </div>
+
+            <AdminUserList
+              users={usersWithPlans}
+              plans={allPlans}
+              translations={t}
+            />
+          </section>
         </div>
       </main>
     </div>
