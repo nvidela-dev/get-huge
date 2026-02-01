@@ -4,6 +4,7 @@ import { getTrainingStatus } from "@/lib/training";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { formatDuration, intervalToDuration } from "date-fns";
+import { getTranslations, type Language, type Translations } from "@/lib/translations";
 
 export default async function Home() {
   const user = await getOrCreateUser();
@@ -13,13 +14,19 @@ export default async function Home() {
   }
 
   const status = await getTrainingStatus(user.id);
+  const t = getTranslations(user.language as Language);
+
+  // Redirect new users to onboarding
+  if (status.type === "no_plan") {
+    redirect("/onboarding");
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="flex items-center justify-between p-4 border-b border-steel-light">
         <h1 className="font-[family-name:var(--font-bebas)] text-2xl tracking-wider text-crimson">
-          LIFTTRACK
+          {t.appName}
         </h1>
         <UserButton
           appearance={{
@@ -32,18 +39,18 @@ export default async function Home() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6">
-        {status.type === "no_plan" && <NoPlanView userName={user.name} />}
         {status.type === "week_complete" && (
-          <WeekCompleteView sessionsThisWeek={status.sessionsThisWeek ?? 3} />
+          <WeekCompleteView sessionsThisWeek={status.sessionsThisWeek ?? 3} t={t} />
         )}
         {status.type === "trained_today" && status.todaysWorkout && (
-          <TodaysWorkoutView workout={status.todaysWorkout} />
+          <TodaysWorkoutView workout={status.todaysWorkout} t={t} />
         )}
-        {status.type === "recovery_day" && <RecoveryDayView />}
+        {status.type === "recovery_day" && <RecoveryDayView t={t} />}
         {status.type === "ready" && status.trainingDay && (
           <ReadyToTrainView
             userName={user.name}
             trainingDay={status.trainingDay}
+            t={t}
           />
         )}
       </main>
@@ -51,15 +58,15 @@ export default async function Home() {
       {/* Footer nav */}
       <nav className="border-t border-steel-light p-4">
         <div className="flex justify-around text-bone/60 text-sm">
-          <span className="text-crimson">Today</span>
+          <span className="text-crimson">{t.nav.today}</span>
           <Link href="/history" className="hover:text-bone">
-            History
+            {t.nav.history}
           </Link>
           <Link href="/progress" className="hover:text-bone">
-            Progress
+            {t.nav.progress}
           </Link>
           <Link href="/plans" className="hover:text-bone">
-            Plans
+            {t.nav.plans}
           </Link>
         </div>
       </nav>
@@ -67,57 +74,30 @@ export default async function Home() {
   );
 }
 
-function NoPlanView({ userName }: { userName: string | null }) {
-  return (
-    <div className="text-center space-y-8">
-      <p className="text-bone text-lg">
-        {userName ? `Welcome, ${userName}` : "Welcome"}
-      </p>
-
-      <div className="space-y-4">
-        <h2 className="font-[family-name:var(--font-bebas)] text-4xl tracking-wide text-foreground">
-          NO PLAN SELECTED
-        </h2>
-        <p className="text-bone/60 max-w-xs mx-auto">
-          Choose a training plan to start tracking your lifts
-        </p>
-      </div>
-
-      <Link
-        href="/plans"
-        className="btn-brutal inline-block px-12 py-4 text-xl font-[family-name:var(--font-bebas)] tracking-widest"
-      >
-        CHOOSE PLAN
-      </Link>
-    </div>
-  );
-}
-
-function WeekCompleteView({ sessionsThisWeek }: { sessionsThisWeek: number }) {
+function WeekCompleteView({ sessionsThisWeek, t }: { sessionsThisWeek: number; t: Translations }) {
   return (
     <div className="text-center space-y-8">
       <div className="space-y-2">
         <p className="text-crimson uppercase tracking-widest text-sm">
-          Week Complete
+          {t.weekComplete.weekComplete}
         </p>
         <h2 className="font-[family-name:var(--font-bebas)] text-5xl sm:text-6xl tracking-wide text-foreground">
-          REST UP
+          {t.weekComplete.restUp}
         </h2>
       </div>
 
       <div className="card-brutal p-6 max-w-sm mx-auto">
         <p className="text-bone/60 uppercase tracking-widest text-xs mb-2">
-          This Week
+          {t.weekComplete.thisWeek}
         </p>
         <p className="text-4xl font-[family-name:var(--font-bebas)] text-crimson">
           {sessionsThisWeek}/3
         </p>
-        <p className="text-bone/60 text-sm mt-2">sessions completed</p>
+        <p className="text-bone/60 text-sm mt-2">{t.weekComplete.sessionsCompleted}</p>
       </div>
 
       <p className="text-bone/40 text-sm max-w-xs mx-auto">
-        You crushed it. Recovery is part of the process. Come back Monday ready
-        to lift.
+        {t.weekComplete.restMessage}
       </p>
     </div>
   );
@@ -125,6 +105,7 @@ function WeekCompleteView({ sessionsThisWeek }: { sessionsThisWeek: number }) {
 
 function TodaysWorkoutView({
   workout,
+  t,
 }: {
   workout: {
     sessionId: string;
@@ -136,6 +117,7 @@ function TodaysWorkoutView({
     totalSets: number;
     exercises: { name: string; sets: number }[];
   };
+  t: Translations;
 }) {
   const duration = intervalToDuration({
     start: workout.startedAt,
@@ -150,38 +132,38 @@ function TodaysWorkoutView({
     <div className="text-center space-y-8">
       <div className="space-y-2">
         <p className="text-green-500 uppercase tracking-widest text-sm">
-          Crushed It
+          {t.trainedToday.crushedIt}
         </p>
         <h2 className="font-[family-name:var(--font-bebas)] text-5xl sm:text-6xl tracking-wide text-foreground">
           {workout.dayName.toUpperCase()}
         </h2>
         <p className="text-bone/60 text-sm">
-          Week {workout.weekNumber} • Session {workout.dayNumber}
+          {t.home.week} {workout.weekNumber} • {t.home.session} {workout.dayNumber}
         </p>
       </div>
 
       <div className="card-brutal p-6 max-w-sm mx-auto">
         <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
-          Today&apos;s Session
+          {t.trainedToday.todaysSession}
         </p>
         <div className="flex justify-around mb-4">
           <div>
             <p className="text-3xl font-[family-name:var(--font-bebas)] text-crimson">
               {workout.totalSets}
             </p>
-            <p className="text-bone/60 text-xs uppercase">Sets</p>
+            <p className="text-bone/60 text-xs uppercase">{t.trainedToday.sets}</p>
           </div>
           <div>
             <p className="text-3xl font-[family-name:var(--font-bebas)] text-crimson">
               {formattedDuration}
             </p>
-            <p className="text-bone/60 text-xs uppercase">Duration</p>
+            <p className="text-bone/60 text-xs uppercase">{t.trainedToday.duration}</p>
           </div>
         </div>
         <ul className="space-y-1 text-left text-bone/80 text-sm">
           {workout.exercises.map((ex) => (
             <li key={ex.name}>
-              • {ex.name} — {ex.sets} sets
+              • {ex.name} — {ex.sets} {t.history.totalSets}
             </li>
           ))}
         </ul>
@@ -191,72 +173,68 @@ function TodaysWorkoutView({
         href={`/history/${workout.sessionId}`}
         className="text-crimson hover:underline text-sm"
       >
-        View full session details →
+        {t.trainedToday.viewDetails}
       </Link>
 
       <p className="text-bone/40 text-sm max-w-xs mx-auto">
-        Great work today. Rest up and recover. Your muscles grow while you
-        sleep.
+        {t.trainedToday.restMessage}
       </p>
     </div>
   );
 }
 
-function RecoveryDayView() {
+function RecoveryDayView({ t }: { t: Translations }) {
   return (
     <div className="text-center space-y-8">
       <div className="space-y-2">
         <p className="text-amber-500 uppercase tracking-widest text-sm">
-          Recovery Day
+          {t.recoveryDay.recoveryDay}
         </p>
         <h2 className="font-[family-name:var(--font-bebas)] text-5xl sm:text-6xl tracking-wide text-foreground">
-          ACTIVE REST
+          {t.recoveryDay.activeRest}
         </h2>
       </div>
 
       <div className="card-brutal p-6 max-w-sm mx-auto">
         <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
-          The Interference Effect
+          {t.recoveryDay.interferenceEffect}
         </p>
         <p className="text-bone/80 text-sm leading-relaxed">
-          Training heavy lifts on consecutive days can interfere with muscle
-          recovery and strength gains. Your nervous system and muscles need time
-          to rebuild.
+          {t.recoveryDay.interferenceDesc}
         </p>
       </div>
 
       <div className="card-brutal p-6 max-w-sm mx-auto bg-steel-dark/50">
         <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
-          Suggested Activities
+          {t.recoveryDay.suggestedActivities}
         </p>
         <ul className="space-y-3 text-left">
           <li className="flex items-center gap-3 text-bone/80">
             <span className="text-2xl">🚶</span>
             <div>
-              <p className="font-medium">Walk</p>
-              <p className="text-xs text-bone/50">20-45 min low intensity</p>
+              <p className="font-medium">{t.recoveryDay.walk}</p>
+              <p className="text-xs text-bone/50">{t.recoveryDay.walkDesc}</p>
             </div>
           </li>
           <li className="flex items-center gap-3 text-bone/80">
             <span className="text-2xl">🏃</span>
             <div>
-              <p className="font-medium">Light Jog or Run</p>
-              <p className="text-xs text-bone/50">Keep heart rate moderate</p>
+              <p className="font-medium">{t.recoveryDay.jog}</p>
+              <p className="text-xs text-bone/50">{t.recoveryDay.jogDesc}</p>
             </div>
           </li>
           <li className="flex items-center gap-3 text-bone/80">
             <span className="text-2xl">⚽</span>
             <div>
-              <p className="font-medium">Play Sports</p>
-              <p className="text-xs text-bone/50">Basketball, soccer, tennis</p>
+              <p className="font-medium">{t.recoveryDay.sports}</p>
+              <p className="text-xs text-bone/50">{t.recoveryDay.sportsDesc}</p>
             </div>
           </li>
         </ul>
       </div>
 
       <p className="text-bone/40 text-sm max-w-xs mx-auto">
-        Light cardio promotes blood flow and recovery without taxing your
-        muscles. Come back tomorrow ready to lift.
+        {t.recoveryDay.cardioMessage}
       </p>
     </div>
   );
@@ -265,6 +243,7 @@ function RecoveryDayView() {
 function ReadyToTrainView({
   userName,
   trainingDay,
+  t,
 }: {
   userName: string | null;
   trainingDay: {
@@ -280,6 +259,7 @@ function ReadyToTrainView({
       targetReps: string;
     }[];
   };
+  t: Translations;
 }) {
   // Group exercises by muscle group
   const exercisesByMuscle = trainingDay.exercises.reduce((acc, ex) => {
@@ -297,16 +277,16 @@ function ReadyToTrainView({
     <div className="text-center space-y-8">
       {/* Greeting */}
       <p className="text-bone text-lg">
-        {userName ? `Let's go, ${userName}` : "Let's go"}
+        {userName ? `${t.home.letsGo}, ${userName}` : t.home.letsGo}
       </p>
 
       {/* Session indicator */}
       <div className="space-y-2">
         <p className="text-bone/60 uppercase tracking-widest text-sm">
-          Week {trainingDay.weekNumber}
+          {t.home.week} {trainingDay.weekNumber}
         </p>
         <h2 className="font-[family-name:var(--font-bebas)] text-6xl sm:text-7xl tracking-wide text-foreground">
-          SESSION {trainingDay.dayNumber}
+          {t.home.session} {trainingDay.dayNumber}
         </h2>
       </div>
 
@@ -315,13 +295,13 @@ function ReadyToTrainView({
         href={`/session/start?planDayId=${trainingDay.planDayId}&week=${trainingDay.weekNumber}&day=${trainingDay.dayNumber}`}
         className="btn-brutal inline-block px-12 py-4 text-xl font-[family-name:var(--font-bebas)] tracking-widest"
       >
-        START SESSION
+        {t.home.startSession}
       </Link>
 
       {/* Exercise preview - two columns */}
       <div className="card-brutal p-6 max-w-lg mx-auto mt-8">
         <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
-          Today&apos;s Lifts
+          {t.home.todaysLifts}
         </p>
         <div className="grid grid-cols-2 gap-4 text-left">
           {muscleGroups.map(([muscleGroup, exercises]) => (

@@ -20,6 +20,7 @@ export const users = pgTable("users", {
   currentPlanId: uuid("current_plan_id").references(() => plans.id),
   planStartDate: date("plan_start_date"),
   weightUnit: text("weight_unit").default("kg").notNull(), // 'kg' or 'lbs'
+  language: text("language").default("en").notNull(), // 'en' or 'es'
 });
 
 // Plans - loaded from JSON, not user-editable
