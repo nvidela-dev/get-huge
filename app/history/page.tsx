@@ -93,7 +93,7 @@ export default async function HistoryPage() {
                       {inProgressSession.dayName.toUpperCase()}
                     </p>
                     <p className="text-bone/60 text-sm">
-                      Week {inProgressSession.weekNumber} • Day{" "}
+                      Week {inProgressSession.weekNumber} • Session{" "}
                       {inProgressSession.dayInWeek}
                     </p>
                   </div>
@@ -119,7 +119,7 @@ export default async function HistoryPage() {
                       {session.dayName.toUpperCase()}
                     </p>
                     <p className="text-bone/60 text-sm">
-                      Week {session.weekNumber} • Day {session.dayInWeek}
+                      Week {session.weekNumber} • Session {session.dayInWeek}
                     </p>
                   </div>
                   <p className="text-bone/40 text-sm">
