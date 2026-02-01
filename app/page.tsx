@@ -3,6 +3,7 @@ import { getOrCreateUser } from "@/lib/auth";
 import { getTrainingStatus } from "@/lib/training";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { formatDuration, intervalToDuration } from "date-fns";
 
 export default async function Home() {
   const user = await getOrCreateUser();
@@ -35,6 +36,10 @@ export default async function Home() {
         {status.type === "week_complete" && (
           <WeekCompleteView sessionsThisWeek={status.sessionsThisWeek ?? 3} />
         )}
+        {status.type === "trained_today" && status.todaysWorkout && (
+          <TodaysWorkoutView workout={status.todaysWorkout} />
+        )}
+        {status.type === "recovery_day" && <RecoveryDayView />}
         {status.type === "ready" && status.trainingDay && (
           <ReadyToTrainView
             userName={user.name}
@@ -113,6 +118,145 @@ function WeekCompleteView({ sessionsThisWeek }: { sessionsThisWeek: number }) {
       <p className="text-bone/40 text-sm max-w-xs mx-auto">
         You crushed it. Recovery is part of the process. Come back Monday ready
         to lift.
+      </p>
+    </div>
+  );
+}
+
+function TodaysWorkoutView({
+  workout,
+}: {
+  workout: {
+    sessionId: string;
+    dayName: string;
+    weekNumber: number;
+    dayNumber: number;
+    startedAt: Date;
+    endedAt: Date;
+    totalSets: number;
+    exercises: { name: string; sets: number }[];
+  };
+}) {
+  const duration = intervalToDuration({
+    start: workout.startedAt,
+    end: workout.endedAt,
+  });
+  const formattedDuration = formatDuration(duration, {
+    format: ["hours", "minutes"],
+    zero: false,
+  }) || "< 1 min";
+
+  return (
+    <div className="text-center space-y-8">
+      <div className="space-y-2">
+        <p className="text-green-500 uppercase tracking-widest text-sm">
+          Crushed It
+        </p>
+        <h2 className="font-[family-name:var(--font-bebas)] text-5xl sm:text-6xl tracking-wide text-foreground">
+          {workout.dayName.toUpperCase()}
+        </h2>
+        <p className="text-bone/60 text-sm">
+          Week {workout.weekNumber} • Day {workout.dayNumber}
+        </p>
+      </div>
+
+      <div className="card-brutal p-6 max-w-sm mx-auto">
+        <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
+          Today&apos;s Session
+        </p>
+        <div className="flex justify-around mb-4">
+          <div>
+            <p className="text-3xl font-[family-name:var(--font-bebas)] text-crimson">
+              {workout.totalSets}
+            </p>
+            <p className="text-bone/60 text-xs uppercase">Sets</p>
+          </div>
+          <div>
+            <p className="text-3xl font-[family-name:var(--font-bebas)] text-crimson">
+              {formattedDuration}
+            </p>
+            <p className="text-bone/60 text-xs uppercase">Duration</p>
+          </div>
+        </div>
+        <ul className="space-y-1 text-left text-bone/80 text-sm">
+          {workout.exercises.map((ex) => (
+            <li key={ex.name}>
+              • {ex.name} — {ex.sets} sets
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <Link
+        href={`/history/${workout.sessionId}`}
+        className="text-crimson hover:underline text-sm"
+      >
+        View full session details →
+      </Link>
+
+      <p className="text-bone/40 text-sm max-w-xs mx-auto">
+        Great work today. Rest up and recover. Your muscles grow while you
+        sleep.
+      </p>
+    </div>
+  );
+}
+
+function RecoveryDayView() {
+  return (
+    <div className="text-center space-y-8">
+      <div className="space-y-2">
+        <p className="text-amber-500 uppercase tracking-widest text-sm">
+          Recovery Day
+        </p>
+        <h2 className="font-[family-name:var(--font-bebas)] text-5xl sm:text-6xl tracking-wide text-foreground">
+          ACTIVE REST
+        </h2>
+      </div>
+
+      <div className="card-brutal p-6 max-w-sm mx-auto">
+        <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
+          The Interference Effect
+        </p>
+        <p className="text-bone/80 text-sm leading-relaxed">
+          Training heavy lifts on consecutive days can interfere with muscle
+          recovery and strength gains. Your nervous system and muscles need time
+          to rebuild.
+        </p>
+      </div>
+
+      <div className="card-brutal p-6 max-w-sm mx-auto bg-steel-dark/50">
+        <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
+          Suggested Activities
+        </p>
+        <ul className="space-y-3 text-left">
+          <li className="flex items-center gap-3 text-bone/80">
+            <span className="text-2xl">🚶</span>
+            <div>
+              <p className="font-medium">Walk</p>
+              <p className="text-xs text-bone/50">20-45 min low intensity</p>
+            </div>
+          </li>
+          <li className="flex items-center gap-3 text-bone/80">
+            <span className="text-2xl">🏃</span>
+            <div>
+              <p className="font-medium">Light Jog or Run</p>
+              <p className="text-xs text-bone/50">Keep heart rate moderate</p>
+            </div>
+          </li>
+          <li className="flex items-center gap-3 text-bone/80">
+            <span className="text-2xl">⚽</span>
+            <div>
+              <p className="font-medium">Play Sports</p>
+              <p className="text-xs text-bone/50">Basketball, soccer, tennis</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <p className="text-bone/40 text-sm max-w-xs mx-auto">
+        Light cardio promotes blood flow and recovery without taxing your
+        muscles. Come back tomorrow ready to lift.
       </p>
     </div>
   );
