@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-import { deleteSession, deleteSet, updateSet, updateSessionNotes } from "./actions";
+import { deleteSession, deleteSet, updateSet, updateSessionNotes, updateSessionTimes } from "./actions";
 import type { Translations } from "@/lib/translations";
 
 interface Set {
@@ -53,6 +54,7 @@ export function SessionDetailView({
   duration,
   translations: t,
 }: SessionDetailViewProps) {
+  const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editingSetId, setEditingSetId] = useState<string | null>(null);
@@ -61,6 +63,10 @@ export function SessionDetailView({
   const [editingNotes, setEditingNotes] = useState(false);
   const [notes, setNotes] = useState(session.notes || "");
   const [savingNotes, setSavingNotes] = useState(false);
+  const [editingTime, setEditingTime] = useState(false);
+  const [editStartTime, setEditStartTime] = useState("");
+  const [editEndTime, setEditEndTime] = useState("");
+  const [savingTime, setSavingTime] = useState(false);
 
   async function handleDeleteSession() {
     setIsDeleting(true);
@@ -101,6 +107,35 @@ export function SessionDetailView({
     setEditingNotes(false);
   }
 
+  function startEditingTime() {
+    // Format dates for datetime-local input
+    const startDate = new Date(session.startedAt);
+    const endDate = session.endedAt ? new Date(session.endedAt) : new Date();
+    setEditStartTime(formatForInput(startDate));
+    setEditEndTime(formatForInput(endDate));
+    setEditingTime(true);
+  }
+
+  async function handleSaveTime() {
+    if (!editStartTime || !editEndTime) return;
+
+    setSavingTime(true);
+    try {
+      await updateSessionTimes(session.id, editStartTime, editEndTime);
+      setEditingTime(false);
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to update time:", error);
+    }
+    setSavingTime(false);
+  }
+
+  function formatForInput(date: Date): string {
+    // Format as YYYY-MM-DDTHH:MM for datetime-local input
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -130,7 +165,7 @@ export function SessionDetailView({
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-3 gap-4 mb-4">
             <div className="card-brutal p-4 text-center">
               <p className="font-[family-name:var(--font-bebas)] text-2xl text-crimson">
                 {totalSets}
@@ -155,6 +190,79 @@ export function SessionDetailView({
                 {t.history.volume} ({weightUnit})
               </p>
             </div>
+          </div>
+
+          {/* Session Time */}
+          <div className="card-brutal p-4 mb-8">
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-bone/60 text-xs uppercase tracking-wider">
+                {t.history.sessionTime}
+              </p>
+              {!editingTime && session.endedAt && (
+                <button
+                  onClick={startEditingTime}
+                  className="text-bone/40 hover:text-bone text-xs"
+                >
+                  {t.history.editTime}
+                </button>
+              )}
+            </div>
+            {editingTime ? (
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-bone/40 text-xs mb-1">
+                      {t.history.startTime}
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={editStartTime}
+                      onChange={(e) => setEditStartTime(e.target.value)}
+                      className="w-full bg-background-alt border border-border px-3 py-2 text-bone text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-bone/40 text-xs mb-1">
+                      {t.history.endTime}
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={editEndTime}
+                      onChange={(e) => setEditEndTime(e.target.value)}
+                      className="w-full bg-background-alt border border-border px-3 py-2 text-bone text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveTime}
+                    disabled={savingTime}
+                    className="text-green-500 hover:text-green-400 text-sm"
+                  >
+                    {savingTime ? t.history.saving : t.history.save}
+                  </button>
+                  <button
+                    onClick={() => setEditingTime(false)}
+                    className="text-bone/40 hover:text-bone text-sm"
+                  >
+                    {t.history.cancel}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-bone/40">{t.history.startTime}: </span>
+                  <span className="text-bone">{format(new Date(session.startedAt), "h:mm a")}</span>
+                </div>
+                <div>
+                  <span className="text-bone/40">{t.history.endTime}: </span>
+                  <span className="text-bone">
+                    {session.endedAt ? format(new Date(session.endedAt), "h:mm a") : "-"}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Exercise breakdown */}

@@ -90,6 +90,10 @@ export const translations = {
       save: "Save",
       add: "Add",
       saving: "Saving...",
+      sessionTime: "Session Time",
+      startTime: "Start",
+      endTime: "End",
+      editTime: "Edit time",
     },
 
     // Progress page
@@ -261,6 +265,10 @@ export const translations = {
       save: "Guardar",
       add: "Agregar",
       saving: "Guardando...",
+      sessionTime: "Tiempo de Sesión",
+      startTime: "Inicio",
+      endTime: "Fin",
+      editTime: "Editar tiempo",
     },
 
     // Progress page

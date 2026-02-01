@@ -110,3 +110,44 @@ export async function updateSessionNotes(sessionId: string, notes: string) {
 
   revalidatePath(`/history/${sessionId}`);
 }
+
+export async function updateSessionTimes(
+  sessionId: string,
+  startedAt: string,
+  endedAt: string
+) {
+  const user = await getOrCreateUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  // Verify ownership before updating
+  const session = await db
+    .select({ id: sessions.id })
+    .from(sessions)
+    .where(and(eq(sessions.id, sessionId), eq(sessions.userId, user.id)))
+    .limit(1);
+
+  if (!session[0]) {
+    throw new Error("Session not found");
+  }
+
+  const startDate = new Date(startedAt);
+  const endDate = new Date(endedAt);
+
+  // Validate that end is after start
+  if (endDate <= startDate) {
+    throw new Error("End time must be after start time");
+  }
+
+  await db
+    .update(sessions)
+    .set({
+      startedAt: startDate,
+      endedAt: endDate,
+    })
+    .where(eq(sessions.id, sessionId));
+
+  revalidatePath(`/history/${sessionId}`);
+  revalidatePath("/history");
+}
