@@ -149,6 +149,7 @@ export const translations = {
       moveToNext: "Move to the next exercise",
       setOf: "of",
       increaseWeight: "You hit 12 reps! Consider increasing weight",
+      progressTo: "You hit 15 reps! Ready to progress to",
     },
 
     // Onboarding
@@ -352,6 +353,7 @@ export const translations = {
       moveToNext: "Pasa al siguiente ejercicio",
       setOf: "de",
       increaseWeight: "¡Llegaste a 12 reps! Considera aumentar el peso",
+      progressTo: "¡Llegaste a 15 reps! Listo para progresar a",
     },
 
     // Onboarding

@@ -36,6 +36,8 @@ interface SessionViewProps {
   }[];
   exerciseHistory: Record<string, { weight: string; reps: number }>;
   weightUnit: string;
+  isBodyweight: boolean;
+  progressionNames: Record<string, string>;
   translations: Translations;
 }
 
@@ -46,6 +48,8 @@ export function SessionView({
   loggedSets,
   exerciseHistory,
   weightUnit,
+  isBodyweight,
+  progressionNames,
   translations: t,
 }: SessionViewProps) {
   const router = useRouter();
@@ -138,6 +142,8 @@ export function SessionView({
             sets={exerciseSets}
             history={exerciseHistory[currentExercise.id]}
             weightUnit={weightUnit}
+            isBodyweight={isBodyweight}
+            nextProgressionName={progressionNames[currentExercise.id]}
             onSetLogged={() => router.refresh()}
             translations={t}
           />
@@ -177,6 +183,8 @@ interface ExerciseCardProps {
   }[];
   history?: { weight: string; reps: number };
   weightUnit: string;
+  isBodyweight: boolean;
+  nextProgressionName?: string;
   onSetLogged: () => void;
   translations: Translations;
 }
@@ -187,10 +195,14 @@ function ExerciseCard({
   sets,
   history,
   weightUnit,
+  isBodyweight,
+  nextProgressionName,
   onSetLogged,
   translations: t,
 }: ExerciseCardProps) {
-  const MAX_REPS = 12;
+  // Weightlifting: 8-12 reps, then increase weight
+  // Bodyweight: 8-15 reps, then progress to harder exercise
+  const MAX_REPS = isBodyweight ? 15 : 12;
   const MIN_REPS = 8;
 
   // Calculate suggested weight and reps based on progression
@@ -201,7 +213,7 @@ function ExerciseCard({
       return {
         weight: lastSet.weight,
         reps: lastSet.reps,
-        suggestWeightIncrease: false,
+        suggestProgression: false,
       };
     }
 
@@ -209,28 +221,28 @@ function ExerciseCard({
     if (history) {
       const lastReps = history.reps;
 
-      // If at or above max reps, suggest weight increase and reset to min reps
+      // If at or above max reps, suggest progression
       if (lastReps >= MAX_REPS) {
         return {
-          weight: history.weight,
+          weight: isBodyweight ? "0" : history.weight,
           reps: MIN_REPS,
-          suggestWeightIncrease: true,
+          suggestProgression: true,
         };
       }
 
       // Otherwise, suggest +1 rep at same weight
       return {
-        weight: history.weight,
+        weight: isBodyweight ? "0" : history.weight,
         reps: Math.min(lastReps + 1, MAX_REPS),
-        suggestWeightIncrease: false,
+        suggestProgression: false,
       };
     }
 
     // Priority 3: No history, use defaults
     return {
-      weight: "",
+      weight: isBodyweight ? "0" : "",
       reps: exercise.defaultReps,
-      suggestWeightIncrease: false,
+      suggestProgression: false,
     };
   };
 
@@ -238,24 +250,26 @@ function ExerciseCard({
   const [weight, setWeight] = useState(defaults.weight);
   const [reps, setReps] = useState(defaults.reps.toString());
   const [isLogging, setIsLogging] = useState(false);
-  const [showWeightHint, setShowWeightHint] = useState(defaults.suggestWeightIncrease);
+  const [showProgressionHint, setShowProgressionHint] = useState(defaults.suggestProgression);
 
   // Update defaults when switching exercises or after logging a set
   useEffect(() => {
     const newDefaults = getDefaults();
     setWeight(newDefaults.weight);
     setReps(newDefaults.reps.toString());
-    setShowWeightHint(newDefaults.suggestWeightIncrease);
+    setShowProgressionHint(newDefaults.suggestProgression);
   }, [exercise.id, sets.length]);
 
   const nextSetNumber = sets.length + 1;
   const isComplete = sets.length >= exercise.targetSets;
 
   const handleLogSet = async () => {
-    if (!weight || !reps) return;
+    // For bodyweight, we still need a weight value (use 0)
+    const weightValue = isBodyweight ? "0" : weight;
+    if (!weightValue || !reps) return;
 
     setIsLogging(true);
-    await logSet(sessionId, exercise.id, nextSetNumber, weight, parseInt(reps));
+    await logSet(sessionId, exercise.id, nextSetNumber, weightValue, parseInt(reps));
     setIsLogging(false);
     onSetLogged();
   };
@@ -285,7 +299,11 @@ function ExerciseCard({
           >
             <span className="text-bone/60 text-sm">{t.common.set} {set.setNumber}</span>
             <span className="text-foreground font-medium">
-              {set.weight} {weightUnit} × {set.reps}
+              {isBodyweight ? (
+                `${set.reps} ${t.session.reps.toLowerCase()}`
+              ) : (
+                `${set.weight} ${weightUnit} × ${set.reps}`
+              )}
             </span>
           </div>
         ))}
@@ -298,30 +316,37 @@ function ExerciseCard({
             {t.common.set} {nextSetNumber} {t.session.setOf} {exercise.targetSets}
           </p>
 
-          {/* Weight increase suggestion */}
-          {showWeightHint && (
+          {/* Progression suggestion */}
+          {showProgressionHint && (
             <div className="bg-amber-500/10 border border-amber-500/30 p-3 text-center">
               <p className="text-amber-500 text-sm">
-                ↑ {t.session.increaseWeight}
+                {isBodyweight && nextProgressionName ? (
+                  <>↑ {t.session.progressTo} <strong>{nextProgressionName}</strong></>
+                ) : (
+                  <>↑ {t.session.increaseWeight}</>
+                )}
               </p>
             </div>
           )}
 
           <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="block text-bone/60 text-xs uppercase tracking-wider mb-1">
-                {t.session.weight} ({weightUnit})
-              </label>
-              <input
-                type="number"
-                inputMode="decimal"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                className="w-full bg-steel border border-steel-light p-3 text-foreground text-lg text-center focus:outline-none focus:border-crimson"
-                placeholder="0"
-              />
-            </div>
-            <div className="flex-1">
+            {/* Weight input - only for weightlifting */}
+            {!isBodyweight && (
+              <div className="flex-1">
+                <label className="block text-bone/60 text-xs uppercase tracking-wider mb-1">
+                  {t.session.weight} ({weightUnit})
+                </label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  className="w-full bg-steel border border-steel-light p-3 text-foreground text-lg text-center focus:outline-none focus:border-crimson"
+                  placeholder="0"
+                />
+              </div>
+            )}
+            <div className={isBodyweight ? "w-full" : "flex-1"}>
               <label className="block text-bone/60 text-xs uppercase tracking-wider mb-1">
                 {t.session.reps}
               </label>
@@ -338,7 +363,7 @@ function ExerciseCard({
 
           <button
             onClick={handleLogSet}
-            disabled={!weight || !reps || isLogging}
+            disabled={(!isBodyweight && !weight) || !reps || isLogging}
             className="btn-brutal w-full py-3 text-lg font-[family-name:var(--font-bebas)] tracking-wider disabled:opacity-50"
           >
             {isLogging ? t.session.logging : t.session.logSet}

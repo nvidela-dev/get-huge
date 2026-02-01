@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import {
   sessions,
   planDays,
+  plans,
   planDayExercises,
   exercises,
   sessionSets,
@@ -26,14 +27,16 @@ export default async function ActiveSessionPage({ params }: Props) {
 
   const t = getTranslations(user.language as Language);
 
-  // Get session with plan day info
+  // Get session with plan day and plan info
   const sessionResults = await db
     .select({
       session: sessions,
       planDay: planDays,
+      planType: plans.type,
     })
     .from(sessions)
     .innerJoin(planDays, eq(sessions.planDayId, planDays.id))
+    .innerJoin(plans, eq(planDays.planId, plans.id))
     .where(and(eq(sessions.id, id), eq(sessions.userId, user.id)))
     .limit(1);
 
@@ -48,6 +51,8 @@ export default async function ActiveSessionPage({ params }: Props) {
     redirect("/");
   }
 
+  const isBodyweight = result.planType === "bodyweight";
+
   // Get exercises for this session
   const dayExercises = await db
     .select({
@@ -59,11 +64,29 @@ export default async function ActiveSessionPage({ params }: Props) {
       defaultReps: planDayExercises.defaultReps,
       rpeTarget: planDayExercises.rpeTarget,
       order: planDayExercises.order,
+      nextProgressionId: exercises.nextProgressionId,
     })
     .from(planDayExercises)
     .innerJoin(exercises, eq(planDayExercises.exerciseId, exercises.id))
     .where(eq(planDayExercises.planDayId, result.planDay.id))
     .orderBy(planDayExercises.order);
+
+  // Get next progression names for bodyweight exercises
+  const progressionNames: Record<string, string> = {};
+  if (isBodyweight) {
+    for (const ex of dayExercises) {
+      if (ex.nextProgressionId) {
+        const nextEx = await db
+          .select({ name: exercises.name })
+          .from(exercises)
+          .where(eq(exercises.id, ex.nextProgressionId))
+          .limit(1);
+        if (nextEx[0]) {
+          progressionNames[ex.id] = nextEx[0].name;
+        }
+      }
+    }
+  }
 
   // Get last weight and reps for each exercise from previous sessions
   const exerciseIds = dayExercises.map((e) => e.id);
@@ -108,6 +131,8 @@ export default async function ActiveSessionPage({ params }: Props) {
       loggedSets={loggedSets}
       exerciseHistory={exerciseHistory}
       weightUnit={user.weightUnit}
+      isBodyweight={isBodyweight}
+      progressionNames={progressionNames}
       translations={t}
     />
   );

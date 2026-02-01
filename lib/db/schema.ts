@@ -28,6 +28,7 @@ export const plans = pgTable("plans", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   description: text("description"),
+  type: text("type").default("weightlifting").notNull(), // 'weightlifting' or 'bodyweight'
   totalWeeks: integer("total_weeks"), // null = indefinite
   daysPerWeek: integer("days_per_week").default(3).notNull(),
   isTemplate: boolean("is_template").default(true).notNull(),
@@ -51,6 +52,8 @@ export const exercises = pgTable("exercises", {
   name: text("name").notNull().unique(),
   muscleGroup: text("muscle_group").notNull(),
   isCompound: boolean("is_compound").default(false).notNull(),
+  // For bodyweight progressions: links to the next harder variation
+  nextProgressionId: uuid("next_progression_id"),
 });
 
 // Plan Day Exercises - which exercises on which day
@@ -125,9 +128,13 @@ export const planDaysRelations = relations(planDays, ({ one, many }) => ({
   sessions: many(sessions),
 }));
 
-export const exercisesRelations = relations(exercises, ({ many }) => ({
+export const exercisesRelations = relations(exercises, ({ one, many }) => ({
   planDayExercises: many(planDayExercises),
   sessionSets: many(sessionSets),
+  nextProgression: one(exercises, {
+    fields: [exercises.nextProgressionId],
+    references: [exercises.id],
+  }),
 }));
 
 export const planDayExercisesRelations = relations(
