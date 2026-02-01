@@ -1,0 +1,360 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { format } from "date-fns";
+import { deleteSession, deleteSet, updateSet, updateSessionNotes } from "./actions";
+
+interface Set {
+  id: string;
+  setNumber: number;
+  weight: string;
+  reps: number;
+  isWarmup: boolean;
+}
+
+interface Exercise {
+  id: string;
+  name: string;
+  muscleGroup: string;
+}
+
+interface ExerciseGroup {
+  exercise: Exercise;
+  sets: Set[];
+}
+
+interface SessionDetailViewProps {
+  session: {
+    id: string;
+    startedAt: Date;
+    endedAt: Date | null;
+    weekNumber: number;
+    dayInWeek: number;
+    notes: string | null;
+  };
+  planDayName: string;
+  exerciseGroups: ExerciseGroup[];
+  weightUnit: string;
+  totalSets: number;
+  totalVolume: number;
+  duration: number | null;
+}
+
+export function SessionDetailView({
+  session,
+  planDayName,
+  exerciseGroups,
+  weightUnit,
+  totalSets,
+  totalVolume,
+  duration,
+}: SessionDetailViewProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [editingSetId, setEditingSetId] = useState<string | null>(null);
+  const [editWeight, setEditWeight] = useState("");
+  const [editReps, setEditReps] = useState("");
+  const [editingNotes, setEditingNotes] = useState(false);
+  const [notes, setNotes] = useState(session.notes || "");
+  const [savingNotes, setSavingNotes] = useState(false);
+
+  async function handleDeleteSession() {
+    setIsDeleting(true);
+    try {
+      await deleteSession(session.id);
+    } catch {
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  }
+
+  async function handleDeleteSet(setId: string) {
+    await deleteSet(setId, session.id);
+  }
+
+  function startEditingSet(set: Set) {
+    setEditingSetId(set.id);
+    setEditWeight(set.weight);
+    setEditReps(set.reps.toString());
+  }
+
+  async function handleSaveSet(setId: string) {
+    const weight = parseFloat(editWeight);
+    const reps = parseInt(editReps);
+
+    if (isNaN(weight) || isNaN(reps) || weight <= 0 || reps <= 0) {
+      return;
+    }
+
+    await updateSet(setId, session.id, editWeight, reps);
+    setEditingSetId(null);
+  }
+
+  async function handleSaveNotes() {
+    setSavingNotes(true);
+    await updateSessionNotes(session.id, notes);
+    setSavingNotes(false);
+    setEditingNotes(false);
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="flex items-center justify-between p-4 border-b border-steel-light">
+        <Link
+          href="/history"
+          className="text-bone/60 hover:text-bone transition-colors"
+        >
+          ← Back
+        </Link>
+        <span className="text-bone/40 text-sm">
+          {format(new Date(session.startedAt), "MMMM d, yyyy")}
+        </span>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6">
+        <div className="max-w-2xl mx-auto">
+          {/* Session header */}
+          <div className="text-center mb-8">
+            <p className="text-bone/60 text-xs uppercase tracking-wider">
+              Week {session.weekNumber} • Day {session.dayInWeek}
+            </p>
+            <h1 className="font-[family-name:var(--font-bebas)] text-5xl tracking-wide text-foreground">
+              {planDayName.toUpperCase()}
+            </h1>
+          </div>
+
+          {/* Stats row */}
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="card-brutal p-4 text-center">
+              <p className="font-[family-name:var(--font-bebas)] text-2xl text-crimson">
+                {totalSets}
+              </p>
+              <p className="text-bone/60 text-xs uppercase tracking-wider">
+                Sets
+              </p>
+            </div>
+            <div className="card-brutal p-4 text-center">
+              <p className="font-[family-name:var(--font-bebas)] text-2xl text-crimson">
+                {duration ? formatDuration(duration) : "-"}
+              </p>
+              <p className="text-bone/60 text-xs uppercase tracking-wider">
+                Duration
+              </p>
+            </div>
+            <div className="card-brutal p-4 text-center">
+              <p className="font-[family-name:var(--font-bebas)] text-2xl text-crimson">
+                {totalVolume.toLocaleString()}
+              </p>
+              <p className="text-bone/60 text-xs uppercase tracking-wider">
+                Volume ({weightUnit})
+              </p>
+            </div>
+          </div>
+
+          {/* Exercise breakdown */}
+          <div className="space-y-6">
+            {exerciseGroups.map(({ exercise, sets }) => {
+              const workingSets = sets.filter((s) => !s.isWarmup);
+              const bestSet = workingSets.length > 0
+                ? workingSets.reduce(
+                    (best, s) =>
+                      parseFloat(s.weight) > parseFloat(best.weight) ? s : best,
+                    workingSets[0]
+                  )
+                : null;
+
+              return (
+                <div key={exercise.id} className="card-brutal p-4">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="font-[family-name:var(--font-bebas)] text-xl text-foreground">
+                        {exercise.name.toUpperCase()}
+                      </h3>
+                      <p className="text-bone/40 text-xs uppercase">
+                        {exercise.muscleGroup}
+                      </p>
+                    </div>
+                    {bestSet && (
+                      <div className="text-right">
+                        <p className="text-crimson font-bold">
+                          {bestSet.weight} {weightUnit} × {bestSet.reps}
+                        </p>
+                        <p className="text-bone/40 text-xs">Best set</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    {workingSets.map((set) => (
+                      <div
+                        key={set.id}
+                        className="flex justify-between items-center text-sm py-2 border-b border-steel-light last:border-0 group"
+                      >
+                        {editingSetId === set.id ? (
+                          <>
+                            <span className="text-bone/60">Set {set.setNumber}</span>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="number"
+                                value={editWeight}
+                                onChange={(e) => setEditWeight(e.target.value)}
+                                className="w-16 bg-steel-dark border border-steel-light px-2 py-1 text-bone text-right"
+                                step="0.5"
+                              />
+                              <span className="text-bone/60">{weightUnit} ×</span>
+                              <input
+                                type="number"
+                                value={editReps}
+                                onChange={(e) => setEditReps(e.target.value)}
+                                className="w-12 bg-steel-dark border border-steel-light px-2 py-1 text-bone text-right"
+                              />
+                              <button
+                                onClick={() => handleSaveSet(set.id)}
+                                className="text-green-500 hover:text-green-400 px-2"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={() => setEditingSetId(null)}
+                                className="text-bone/40 hover:text-bone px-2"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <span className="text-bone/60">Set {set.setNumber}</span>
+                            <div className="flex items-center gap-4">
+                              <span className="text-bone">
+                                {set.weight} {weightUnit} × {set.reps}
+                              </span>
+                              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                                <button
+                                  onClick={() => startEditingSet(set)}
+                                  className="text-bone/40 hover:text-bone text-xs"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteSet(set.id)}
+                                  className="text-crimson/60 hover:text-crimson text-xs"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Notes */}
+          <div className="mt-8 card-brutal p-4">
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-bone/60 text-xs uppercase tracking-wider">
+                Notes
+              </p>
+              {!editingNotes && (
+                <button
+                  onClick={() => setEditingNotes(true)}
+                  className="text-bone/40 hover:text-bone text-xs"
+                >
+                  {session.notes ? "Edit" : "Add"}
+                </button>
+              )}
+            </div>
+            {editingNotes ? (
+              <div className="space-y-2">
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="w-full bg-steel-dark border border-steel-light px-3 py-2 text-bone min-h-[100px] resize-none"
+                  placeholder="Add notes about this session..."
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveNotes}
+                    disabled={savingNotes}
+                    className="text-green-500 hover:text-green-400 text-sm"
+                  >
+                    {savingNotes ? "Saving..." : "Save"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingNotes(false);
+                      setNotes(session.notes || "");
+                    }}
+                    className="text-bone/40 hover:text-bone text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-bone">
+                {session.notes || <span className="text-bone/40 italic">No notes</span>}
+              </p>
+            )}
+          </div>
+
+          {exerciseGroups.length === 0 && (
+            <div className="card-brutal p-8 text-center">
+              <p className="text-bone/60">No sets logged in this session.</p>
+            </div>
+          )}
+
+          {/* Delete session */}
+          <div className="mt-8 pt-8 border-t border-steel-light">
+            {showDeleteConfirm ? (
+              <div className="card-brutal p-4 bg-crimson/10 border-crimson/30">
+                <p className="text-bone mb-4">
+                  Are you sure you want to delete this session? This cannot be undone.
+                </p>
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleDeleteSession}
+                    disabled={isDeleting}
+                    className="bg-crimson text-bone px-4 py-2 font-[family-name:var(--font-bebas)] tracking-wider hover:bg-crimson/80 disabled:opacity-50"
+                  >
+                    {isDeleting ? "Deleting..." : "Yes, Delete"}
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="text-bone/60 hover:text-bone px-4 py-2"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="text-crimson/60 hover:text-crimson text-sm"
+              >
+                Delete this session
+              </button>
+            )}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function formatDuration(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  if (h > 0) {
+    return `${h}h ${m}m`;
+  }
+  return `${m}m`;
+}
