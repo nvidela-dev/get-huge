@@ -72,6 +72,7 @@ export function SessionDetailView({
     setIsDeleting(true);
     try {
       await deleteSession(session.id);
+      router.push("/history");
     } catch {
       setIsDeleting(false);
       setShowDeleteConfirm(false);
