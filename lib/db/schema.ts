@@ -52,6 +52,7 @@ export const exercises = pgTable("exercises", {
   name: text("name").notNull().unique(),
   muscleGroup: text("muscle_group").notNull(),
   isCompound: boolean("is_compound").default(false).notNull(),
+  isBodyweight: boolean("is_bodyweight").default(false).notNull(),
   // For bodyweight progressions: links to the next harder variation
   nextProgressionId: uuid("next_progression_id"),
 });
