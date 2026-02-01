@@ -5,7 +5,6 @@ import { plans, planDays, planDayExercises } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function updatePlanDayExercise(
   planDayExerciseId: string,
@@ -75,5 +74,4 @@ export async function deletePlan(planId: string) {
   await db.delete(plans).where(eq(plans.id, planId));
 
   revalidatePath("/admin");
-  redirect("/admin");
 }

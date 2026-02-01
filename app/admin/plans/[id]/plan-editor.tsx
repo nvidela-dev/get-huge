@@ -46,12 +46,14 @@ interface PlanEditorProps {
 }
 
 export function PlanEditor({ plan, days, allExercises, translations: t }: PlanEditorProps) {
+  const router = useRouter();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
     startTransition(async () => {
       await deletePlan(plan.id);
+      router.push("/admin");
     });
   };
 
