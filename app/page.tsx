@@ -275,11 +275,22 @@ function ReadyToTrainView({
     exercises: {
       id: string;
       name: string;
+      muscleGroup: string;
       targetSets: number;
       targetReps: string;
     }[];
   };
 }) {
+  // Group exercises by muscle group
+  const exercisesByMuscle = trainingDay.exercises.reduce((acc, ex) => {
+    const group = ex.muscleGroup;
+    if (!acc[group]) {
+      acc[group] = [];
+    }
+    acc[group].push(ex);
+    return acc;
+  }, {} as Record<string, typeof trainingDay.exercises>);
+
   return (
     <div className="text-center space-y-8">
       {/* Greeting */}
@@ -310,13 +321,22 @@ function ReadyToTrainView({
         <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
           Today&apos;s Lifts
         </p>
-        <ul className="space-y-2 text-left text-bone/80">
-          {trainingDay.exercises.map((ex) => (
-            <li key={ex.id}>
-              • {ex.name} — {ex.targetSets}×{ex.targetReps}
-            </li>
+        <div className="space-y-4 text-left">
+          {Object.entries(exercisesByMuscle).map(([muscleGroup, exercises]) => (
+            <div key={muscleGroup}>
+              <p className="text-crimson text-xs uppercase tracking-wider mb-1">
+                {muscleGroup}
+              </p>
+              <ul className="space-y-1 text-bone/80">
+                {exercises.map((ex) => (
+                  <li key={ex.id}>
+                    • {ex.name} — {ex.targetSets}×{ex.targetReps}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
