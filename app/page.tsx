@@ -50,7 +50,9 @@ export default async function Home() {
           <Link href="/history" className="hover:text-bone">
             History
           </Link>
-          <span>Progress</span>
+          <Link href="/progress" className="hover:text-bone">
+            Progress
+          </Link>
           <Link href="/plans" className="hover:text-bone">
             Plans
           </Link>
