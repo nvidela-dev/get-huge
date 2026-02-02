@@ -34,7 +34,18 @@
       "Bash(npx dotenv:*)",
       "Bash(node -e:*)",
       "Bash(find:*)",
-      "Bash(git diff:*)"
+      "Bash(git diff:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.exercisedb.dev)",
+      "WebFetch(domain:exercisedb.dev)",
+      "WebSearch",
+      "WebFetch(domain:rapidapi.com)",
+      "WebFetch(domain:edb-docs.up.railway.app)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(grep:*)"
     ]
   }
 }

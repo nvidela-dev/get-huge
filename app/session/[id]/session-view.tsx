@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logSet, endSession } from "./actions";
-import { ExerciseFormHelper } from "@/components/exercise-form-helper";
 import type { Translations } from "@/lib/translations";
 
 interface SessionViewProps {
@@ -290,9 +289,6 @@ function ExerciseCard({
           {exercise.rpeTarget && ` @ RPE ${exercise.rpeTarget}`}
         </p>
       </div>
-
-      {/* Form helper with images */}
-      <ExerciseFormHelper exerciseName={exercise.name} translations={t} />
 
       {/* Logged sets */}
       <div className="space-y-2">
