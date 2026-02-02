@@ -1,0 +1,172 @@
+{
+  "name": "Bodyweight Backup",
+  "description": "3-day bodyweight training plan for when you can't hit the gym",
+  "type": "bodyweight",
+  "totalWeeks": null,
+  "daysPerWeek": 3,
+  "days": [
+    {
+      "dayNumber": 1,
+      "name": "Push",
+      "exercises": [
+        {
+          "name": "Push-ups",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Diamond Push-ups",
+          "targetSets": 4,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Diamond Push-ups",
+          "muscleGroup": "triceps",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Decline Push-ups",
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Decline Push-ups",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Pike Push-ups",
+          "muscleGroup": "shoulders",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Wall Handstand Push-ups",
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Tricep Dips (Bench)",
+          "muscleGroup": "triceps",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "8-15"
+        }
+      ]
+    },
+    {
+      "dayNumber": 2,
+      "name": "Pull",
+      "exercises": [
+        {
+          "name": "Australian Rows",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Pull-ups",
+          "targetSets": 4,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Pull-ups",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Wide Grip Pull-ups",
+          "targetSets": 4,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Wide Grip Pull-ups",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Chin-ups",
+          "muscleGroup": "biceps",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Bodyweight Bicep Curls",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "8-15"
+        }
+      ]
+    },
+    {
+      "dayNumber": 3,
+      "name": "Legs & Core",
+      "exercises": [
+        {
+          "name": "Air Squats",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Bulgarian Split Squats",
+          "targetSets": 4,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Bulgarian Split Squats",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Pistol Squats",
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Lunges",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Glute Bridges",
+          "muscleGroup": "glutes",
+          "isCompound": false,
+          "isBodyweight": true,
+          "nextProgression": "Single Leg Glute Bridges",
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Calf Raises",
+          "muscleGroup": "calves",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "15-20"
+        },
+        {
+          "name": "Leg Raises",
+          "muscleGroup": "core",
+          "isCompound": false,
+          "isBodyweight": true,
+          "nextProgression": "Hanging Leg Raises",
+          "targetSets": 3,
+          "targetReps": "8-15"
+        },
+        {
+          "name": "Plank",
+          "muscleGroup": "core",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "30-60s"
+        }
+      ]
+    }
+  ]
+}

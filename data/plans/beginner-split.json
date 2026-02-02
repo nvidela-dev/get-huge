@@ -1,0 +1,211 @@
+{
+  "name": "Beginner Split",
+  "description": "Machine-focused variation for building foundational strength. 3 sessions per week.",
+  "type": "weightlifting",
+  "totalWeeks": null,
+  "daysPerWeek": 3,
+  "days": [
+    {
+      "dayNumber": 1,
+      "name": "Session 1",
+      "exercises": [
+        {
+          "name": "Incline Press",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "8-10",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Lat Pulldown (Wide Grip)",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Lateral Flies",
+          "muscleGroup": "shoulders",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "12-15",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Squat",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "8-10",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Preacher Curls",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Cable Triceps",
+          "muscleGroup": "triceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "12-15",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Forearm Cable",
+          "muscleGroup": "forearms",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "15-20",
+          "rpeTarget": 7
+        }
+      ]
+    },
+    {
+      "dayNumber": 2,
+      "name": "Session 2",
+      "exercises": [
+        {
+          "name": "Lat Pulldown (Close Grip)",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Lateral Flies",
+          "muscleGroup": "shoulders",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "12-15",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Shoulder Press",
+          "muscleGroup": "shoulders",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "8-10",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Seated Row",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Chest Press",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "8-10",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Bicep Cable Curl",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Cable Tricep",
+          "muscleGroup": "triceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "12-15",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Hammer Curl",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Forearm Cable",
+          "muscleGroup": "forearms",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "15-20",
+          "rpeTarget": 7
+        }
+      ]
+    },
+    {
+      "dayNumber": 3,
+      "name": "Session 3",
+      "exercises": [
+        {
+          "name": "Dips",
+          "muscleGroup": "triceps",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "8-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Lat Pulldown (Wide Grip)",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Leg Press",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "targetSets": 4,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Romanian Deadlift (Light)",
+          "muscleGroup": "hamstrings",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "10-12",
+          "rpeTarget": 6
+        },
+        {
+          "name": "Incline Press",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "8-10",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Ez Bar Bicep Curl",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "10-12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Lateral Flies",
+          "muscleGroup": "shoulders",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "12-15",
+          "rpeTarget": 7
+        }
+      ]
+    }
+  ]
+}

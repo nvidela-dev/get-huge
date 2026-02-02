@@ -42,6 +42,7 @@ async function seed() {
       .values({
         name: planData.name,
         description: planData.description,
+        type: planData.type || "weightlifting",
         totalWeeks: planData.totalWeeks,
         daysPerWeek: planData.daysPerWeek,
         isTemplate: true,
@@ -61,6 +62,9 @@ async function seed() {
       console.log(`   (plan already exists, skipping)`);
       continue; // Skip if plan already seeded
     }
+
+    // Track exercises that need progression links
+    const progressionLinks: { exerciseName: string; nextProgressionName: string }[] = [];
 
     // Process each day
     for (const dayData of planData.days) {
@@ -88,6 +92,7 @@ async function seed() {
             name: exData.name,
             muscleGroup: exData.muscleGroup,
             isCompound: exData.isCompound,
+            isBodyweight: exData.isBodyweight || false,
           })
           .onConflictDoNothing()
           .returning();
@@ -101,6 +106,14 @@ async function seed() {
           exercise = existing[0];
         }
 
+        // Track progression link if specified
+        if (exData.nextProgression) {
+          progressionLinks.push({
+            exerciseName: exData.name,
+            nextProgressionName: exData.nextProgression,
+          });
+        }
+
         // Link exercise to plan day
         await db.insert(planDayExercises).values({
           planDayId: planDay.id,
@@ -112,6 +125,44 @@ async function seed() {
         });
 
         console.log(`      💪 ${exData.name}`);
+      }
+    }
+
+    // Update progression links after all exercises are created
+    for (const link of progressionLinks) {
+      const [currentEx] = await db
+        .select()
+        .from(exercises)
+        .where(eq(exercises.name, link.exerciseName))
+        .limit(1);
+
+      // Create next progression exercise if it doesn't exist
+      let [nextEx] = await db
+        .select()
+        .from(exercises)
+        .where(eq(exercises.name, link.nextProgressionName))
+        .limit(1);
+
+      if (!nextEx) {
+        // Create the progression exercise with same muscle group as current
+        [nextEx] = await db
+          .insert(exercises)
+          .values({
+            name: link.nextProgressionName,
+            muscleGroup: currentEx?.muscleGroup || "other",
+            isCompound: currentEx?.isCompound || false,
+            isBodyweight: currentEx?.isBodyweight || false,
+          })
+          .returning();
+        console.log(`   ➕ Created progression: ${link.nextProgressionName}`);
+      }
+
+      if (currentEx && nextEx) {
+        await db
+          .update(exercises)
+          .set({ nextProgressionId: nextEx.id })
+          .where(eq(exercises.id, currentEx.id));
+        console.log(`   🔗 ${link.exerciseName} → ${link.nextProgressionName}`);
       }
     }
 

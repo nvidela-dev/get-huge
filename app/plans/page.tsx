@@ -15,17 +15,25 @@ export default async function PlansPage() {
   }
 
   const t = getTranslations(user.language as Language);
+  const userIsAdmin = isAdmin(user.email);
 
-  // Get all template plans with exercise counts
-  const allPlans = await db
-    .select({
-      id: plans.id,
-      name: plans.name,
-      description: plans.description,
-      daysPerWeek: plans.daysPerWeek,
-    })
-    .from(plans)
-    .where(eq(plans.isTemplate, true));
+  // For regular users, redirect to their current plan if they have one
+  if (!userIsAdmin && user.currentPlanId) {
+    redirect(`/plans/${user.currentPlanId}`);
+  }
+
+  // Get all template plans with exercise counts (for admins only)
+  const allPlans = userIsAdmin
+    ? await db
+        .select({
+          id: plans.id,
+          name: plans.name,
+          description: plans.description,
+          daysPerWeek: plans.daysPerWeek,
+        })
+        .from(plans)
+        .where(eq(plans.isTemplate, true))
+    : [];
 
   // Get exercise counts for each plan
   const plansWithCounts = await Promise.all(
@@ -73,21 +81,33 @@ export default async function PlansPage() {
           <h1 className="font-[family-name:var(--font-bebas)] text-4xl tracking-wide text-foreground mb-2">
             {t.plans.title}
           </h1>
-          <p className="text-bone/60 mb-8">
-            {t.plans.selectPlanDesc}
-          </p>
 
-          <div className="space-y-4">
-            {plansWithCounts.map((plan) => (
-              <PlanCard key={plan.id} plan={plan} translations={t} canSelect={isAdmin(user.email)} />
-            ))}
-          </div>
+          {userIsAdmin ? (
+            <>
+              <p className="text-bone/60 mb-8">
+                {t.plans.selectPlanDesc}
+              </p>
 
-          {plansWithCounts.length === 0 && (
+              <div className="space-y-4">
+                {plansWithCounts.map((plan) => (
+                  <PlanCard key={plan.id} plan={plan} translations={t} canSelect={true} />
+                ))}
+              </div>
+
+              {plansWithCounts.length === 0 && (
+                <div className="card-brutal p-8 text-center">
+                  <p className="text-bone/60">{t.plans.noPlans}</p>
+                  <p className="text-bone/40 text-sm mt-2">
+                    {t.plans.runSeed}
+                  </p>
+                </div>
+              )}
+            </>
+          ) : (
             <div className="card-brutal p-8 text-center">
-              <p className="text-bone/60">{t.plans.noPlans}</p>
-              <p className="text-bone/40 text-sm mt-2">
-                {t.plans.runSeed}
+              <p className="text-bone/60 text-lg mb-2">{t.plans.noPlanAssigned || "No plan assigned yet"}</p>
+              <p className="text-bone/40 text-sm">
+                {t.plans.contactAdmin || "Your plan will be assigned by your trainer."}
               </p>
             </div>
           )}

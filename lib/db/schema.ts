@@ -26,9 +26,9 @@ export const users = pgTable("users", {
 // Plans - loaded from JSON, not user-editable
 export const plans = pgTable("plans", {
   id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   description: text("description"),
-  type: text("type").default("weightlifting").notNull(), // 'weightlifting' or 'bodyweight'
+  type: text("type").default("weightlifting").notNull(), // 'weightlifting', 'bodyweight', or 'mobility'
   totalWeeks: integer("total_weeks"), // null = indefinite
   daysPerWeek: integer("days_per_week").default(3).notNull(),
   isTemplate: boolean("is_template").default(true).notNull(),

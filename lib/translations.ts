@@ -131,6 +131,8 @@ export const translations = {
       selectThisPlan: "SELECT THIS PLAN",
       selecting: "SELECTING...",
       totalExercises: "total exercises",
+      noPlanAssigned: "No plan assigned yet",
+      contactAdmin: "Your plan will be assigned by your trainer.",
     },
 
     // Session page
@@ -150,6 +152,8 @@ export const translations = {
       setOf: "of",
       increaseWeight: "You hit 12 reps! Consider increasing weight",
       progressTo: "You hit 15 reps! Ready to progress to",
+      formHelper: "Form Helper",
+      instructions: "Instructions",
     },
 
     // Onboarding
@@ -335,6 +339,8 @@ export const translations = {
       selectThisPlan: "SELECCIONAR ESTE PLAN",
       selecting: "SELECCIONANDO...",
       totalExercises: "ejercicios totales",
+      noPlanAssigned: "Aún no tienes un plan asignado",
+      contactAdmin: "Tu plan será asignado por tu entrenador.",
     },
 
     // Session page
@@ -354,6 +360,8 @@ export const translations = {
       setOf: "de",
       increaseWeight: "¡Llegaste a 12 reps! Considera aumentar el peso",
       progressTo: "¡Llegaste a 15 reps! Listo para progresar a",
+      formHelper: "Guía de Forma",
+      instructions: "Instrucciones",
     },
 
     // Onboarding

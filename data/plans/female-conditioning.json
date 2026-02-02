@@ -1,0 +1,318 @@
+{
+  "name": "Female Conditioning",
+  "description": "Beginner bodyweight & mobility program. 3x per week, 25-35 minutes. Focus on form over reps.",
+  "type": "mobility",
+  "totalWeeks": null,
+  "daysPerWeek": 3,
+  "days": [
+    {
+      "dayNumber": 1,
+      "name": "Lower Body & Hip Mobility",
+      "exercises": [
+        {
+          "name": "March in Place",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "60s"
+        },
+        {
+          "name": "Arm Circles",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s each direction"
+        },
+        {
+          "name": "Hip Circles",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "10 each direction"
+        },
+        {
+          "name": "Bodyweight Squat",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "8-10"
+        },
+        {
+          "name": "Glute Bridge",
+          "muscleGroup": "glutes",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "10-12"
+        },
+        {
+          "name": "Standing Kickbacks",
+          "muscleGroup": "glutes",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "10 each leg"
+        },
+        {
+          "name": "Wall Sit",
+          "muscleGroup": "quads",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "15-20s"
+        },
+        {
+          "name": "Calf Raises",
+          "muscleGroup": "calves",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "12-15"
+        },
+        {
+          "name": "90/90 Hip Stretch",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s each side"
+        },
+        {
+          "name": "Seated Forward Fold",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s"
+        },
+        {
+          "name": "Lying Knee to Chest",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s each leg"
+        },
+        {
+          "name": "Figure Four Stretch",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s each side"
+        }
+      ]
+    },
+    {
+      "dayNumber": 2,
+      "name": "Upper Body & Shoulders",
+      "exercises": [
+        {
+          "name": "Step Jacks",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s"
+        },
+        {
+          "name": "Shoulder Rolls",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "20"
+        },
+        {
+          "name": "Cat-Cow",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "10"
+        },
+        {
+          "name": "Wall Push-Up",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Incline Push-Up",
+          "targetSets": 2,
+          "targetReps": "8-10"
+        },
+        {
+          "name": "Doorframe Rows",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "10-12"
+        },
+        {
+          "name": "Arm Circles (Exercise)",
+          "muscleGroup": "shoulders",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "15 each direction"
+        },
+        {
+          "name": "Superman Hold",
+          "muscleGroup": "back",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 3,
+          "targetReps": "10-15s"
+        },
+        {
+          "name": "Dead Bug",
+          "muscleGroup": "core",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "8 each side"
+        },
+        {
+          "name": "Doorway Chest Stretch",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s each side"
+        },
+        {
+          "name": "Cross-Body Shoulder Stretch",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s each arm"
+        },
+        {
+          "name": "Child's Pose",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "45s"
+        },
+        {
+          "name": "Neck Rolls",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s"
+        }
+      ]
+    },
+    {
+      "dayNumber": 3,
+      "name": "Full Body & Core",
+      "exercises": [
+        {
+          "name": "Marching",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s"
+        },
+        {
+          "name": "Torso Twists",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "20"
+        },
+        {
+          "name": "Leg Swings",
+          "muscleGroup": "warmup",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "10 each leg"
+        },
+        {
+          "name": "Sumo Squat",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "10"
+        },
+        {
+          "name": "Incline Push-Up",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "isBodyweight": true,
+          "nextProgression": "Push-ups",
+          "targetSets": 2,
+          "targetReps": "6-8"
+        },
+        {
+          "name": "Bird Dog",
+          "muscleGroup": "core",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "8 each side"
+        },
+        {
+          "name": "Standing Side Leg Raise",
+          "muscleGroup": "glutes",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 2,
+          "targetReps": "10 each leg"
+        },
+        {
+          "name": "Plank (Knees)",
+          "muscleGroup": "core",
+          "isCompound": false,
+          "isBodyweight": true,
+          "nextProgression": "Plank",
+          "targetSets": 2,
+          "targetReps": "15-20s"
+        },
+        {
+          "name": "World's Greatest Stretch",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "3 each side"
+        },
+        {
+          "name": "Seated Spinal Twist",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s each side"
+        },
+        {
+          "name": "Happy Baby Pose",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "45s"
+        },
+        {
+          "name": "Standing Quad Stretch",
+          "muscleGroup": "stretching",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 1,
+          "targetReps": "30s each leg"
+        }
+      ]
+    }
+  ]
+}
