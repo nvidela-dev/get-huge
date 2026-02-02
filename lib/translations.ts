@@ -10,6 +10,7 @@ export const translations = {
       today: "Today",
       history: "History",
       progress: "Progress",
+      stats: "Stats",
       plans: "Plans",
       settings: "Settings",
       back: "← Back",
@@ -205,6 +206,25 @@ export const translations = {
       error: "An error occurred",
       set: "Set",
     },
+
+    // Stats page
+    stats: {
+      title: "STATS",
+      consistencyTriangle: "CONSISTENCY TRIANGLE",
+      sessionCompletion: "Session",
+      weeklyCompletion: "Weekly",
+      monthlyCompletion: "Monthly",
+      muscleLevels: "MUSCLE LEVELS",
+      characterLevel: "Character Level",
+      level: "Lv.",
+      toNextLevel: "to next level",
+      progressOverTime: "PROGRESS OVER TIME",
+      volume: "Volume",
+      xp: "XP",
+      noDataYet: "No data yet.",
+      noDataYetDesc: "Complete some sessions to see your stats.",
+      buildingBaseline: "Building baseline...",
+    },
   },
 
   es: {
@@ -216,6 +236,7 @@ export const translations = {
       today: "Hoy",
       history: "Historial",
       progress: "Progreso",
+      stats: "Estadisticas",
       plans: "Planes",
       settings: "Ajustes",
       back: "← Volver",
@@ -410,6 +431,25 @@ export const translations = {
       loading: "Cargando...",
       error: "Ocurrió un error",
       set: "Serie",
+    },
+
+    // Stats page
+    stats: {
+      title: "ESTADISTICAS",
+      consistencyTriangle: "TRIANGULO DE CONSISTENCIA",
+      sessionCompletion: "Sesion",
+      weeklyCompletion: "Semanal",
+      monthlyCompletion: "Mensual",
+      muscleLevels: "NIVELES MUSCULARES",
+      characterLevel: "Nivel de Personaje",
+      level: "Nv.",
+      toNextLevel: "para siguiente nivel",
+      progressOverTime: "PROGRESO EN EL TIEMPO",
+      volume: "Volumen",
+      xp: "XP",
+      noDataYet: "Aun no hay datos.",
+      noDataYetDesc: "Completa algunas sesiones para ver tus estadisticas.",
+      buildingBaseline: "Construyendo linea base...",
     },
   },
 } as const;

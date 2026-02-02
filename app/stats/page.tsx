@@ -1,10 +1,16 @@
-import { getOrCreateUser, isAdmin } from "@/lib/auth";
+import { getOrCreateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { SettingsView } from "./settings-view";
+import { StatsView } from "./stats-view";
 import { getTranslations, type Language } from "@/lib/translations";
+import {
+  getConsistencyMetrics,
+  getMuscleGroupXp,
+  getProgressData,
+  getCharacterLevel,
+} from "@/lib/stats";
 
-export default async function SettingsPage() {
+export default async function StatsPage() {
   const user = await getOrCreateUser();
 
   if (!user) {
@@ -12,6 +18,15 @@ export default async function SettingsPage() {
   }
 
   const t = getTranslations(user.language as Language);
+
+  // Fetch all stats data in parallel
+  const [consistency, muscleXp, progressData, characterLevel] =
+    await Promise.all([
+      getConsistencyMetrics(user.id),
+      getMuscleGroupXp(user.id),
+      getProgressData(user.id),
+      getCharacterLevel(user.id),
+    ]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -28,31 +43,17 @@ export default async function SettingsPage() {
       {/* Main Content */}
       <main className="flex-1 p-6">
         <div className="max-w-2xl mx-auto">
-          <h1 className="font-[family-name:var(--font-bebas)] text-4xl tracking-wide text-foreground mb-8">
-            {t.settings.title}
+          <h1 className="font-[family-name:var(--font-bebas)] text-4xl tracking-wide text-foreground mb-6">
+            {t.stats?.title ?? "STATS"}
           </h1>
 
-          <SettingsView
-            currentLanguage={user.language as Language}
+          <StatsView
+            consistency={consistency}
+            muscleXp={muscleXp}
+            progressData={progressData}
+            characterLevel={characterLevel}
             translations={t}
           />
-
-          {/* Admin link */}
-          {isAdmin(user.email) && (
-            <div className="mt-8 pt-8 border-t border-steel-light">
-              <Link
-                href="/admin"
-                className="card-brutal p-4 block hover:border-crimson/50 transition-colors"
-              >
-                <p className="font-[family-name:var(--font-bebas)] text-xl tracking-wide text-crimson">
-                  {t.admin.title}
-                </p>
-                <p className="text-bone/40 text-sm">
-                  Manage users and assign plans
-                </p>
-              </Link>
-            </div>
-          )}
         </div>
       </main>
 
@@ -68,10 +69,10 @@ export default async function SettingsPage() {
           <Link href="/progress" className="hover:text-bone">
             {t.nav.progress}
           </Link>
-          <Link href="/stats" className="hover:text-bone">
-            {t.nav.stats}
+          <span className="text-crimson">{t.stats?.title ?? "Stats"}</span>
+          <Link href="/settings" className="hover:text-bone">
+            {t.nav.settings}
           </Link>
-          <span className="text-crimson">{t.nav.settings}</span>
         </div>
       </nav>
     </div>

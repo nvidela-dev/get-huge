@@ -55,6 +55,13 @@ export const exercises = pgTable("exercises", {
   isBodyweight: boolean("is_bodyweight").default(false).notNull(),
   // For bodyweight progressions: links to the next harder variation
   nextProgressionId: uuid("next_progression_id"),
+  // Difficulty multiplier for bodyweight exercises (default 1.0)
+  difficultyMultiplier: decimal("difficulty_multiplier", {
+    precision: 4,
+    scale: 2,
+  })
+    .default("1.0")
+    .notNull(),
 });
 
 // Plan Day Exercises - which exercises on which day
@@ -106,6 +113,34 @@ export const sessionSets = pgTable("session_sets", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Muscle Group XP - tracks accumulated XP per muscle group per user
+export const muscleGroupXp = pgTable("muscle_group_xp", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  muscleGroup: text("muscle_group").notNull(),
+  totalXp: integer("total_xp").default(0).notNull(),
+  currentLevel: integer("current_level").default(1).notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// XP Transactions - audit log of XP gains per session
+export const xpTransactions = pgTable("xp_transactions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  sessionId: uuid("session_id")
+    .references(() => sessions.id, { onDelete: "cascade" })
+    .notNull(),
+  muscleGroup: text("muscle_group").notNull(),
+  baseXp: integer("base_xp").notNull(),
+  progressionBonus: integer("progression_bonus").default(0).notNull(),
+  totalXp: integer("total_xp").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ one, many }) => ({
   currentPlan: one(plans, {
@@ -113,6 +148,8 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     references: [plans.id],
   }),
   sessions: many(sessions),
+  muscleGroupXp: many(muscleGroupXp),
+  xpTransactions: many(xpTransactions),
 }));
 
 export const plansRelations = relations(plans, ({ many }) => ({
@@ -162,6 +199,7 @@ export const sessionsRelations = relations(sessions, ({ one, many }) => ({
     references: [planDays.id],
   }),
   sets: many(sessionSets),
+  xpTransactions: many(xpTransactions),
 }));
 
 export const sessionSetsRelations = relations(sessionSets, ({ one }) => ({
@@ -174,3 +212,24 @@ export const sessionSetsRelations = relations(sessionSets, ({ one }) => ({
     references: [exercises.id],
   }),
 }));
+
+export const muscleGroupXpRelations = relations(muscleGroupXp, ({ one }) => ({
+  user: one(users, {
+    fields: [muscleGroupXp.userId],
+    references: [users.id],
+  }),
+}));
+
+export const xpTransactionsRelations = relations(
+  xpTransactions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [xpTransactions.userId],
+      references: [users.id],
+    }),
+    session: one(sessions, {
+      fields: [xpTransactions.sessionId],
+      references: [sessions.id],
+    }),
+  })
+);

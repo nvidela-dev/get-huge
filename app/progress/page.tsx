@@ -140,6 +140,9 @@ export default async function ProgressPage({ searchParams }: Props) {
             {t.nav.history}
           </Link>
           <span className="text-crimson">{t.nav.progress}</span>
+          <Link href="/stats" className="hover:text-bone">
+            {t.nav.stats}
+          </Link>
           <Link href="/settings" className="hover:text-bone">
             {t.nav.settings}
           </Link>

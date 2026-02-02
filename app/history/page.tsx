@@ -165,6 +165,9 @@ export default async function HistoryPage() {
           <Link href="/progress" className="hover:text-bone">
             {t.nav.progress}
           </Link>
+          <Link href="/stats" className="hover:text-bone">
+            {t.nav.stats}
+          </Link>
           <Link href="/settings" className="hover:text-bone">
             {t.nav.settings}
           </Link>
