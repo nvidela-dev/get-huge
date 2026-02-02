@@ -4,8 +4,10 @@ export interface PlanExerciseJSON {
   isCompound: boolean;
   isBodyweight?: boolean;
   nextProgression?: string; // Name of the next harder exercise
+  difficultyMultiplier?: number; // For bodyweight XP calculation (default 1.0)
   targetSets: number;
   targetReps: string;
+  defaultReps?: number; // Default reps for logging (parsed from targetReps if not provided)
   rpeTarget?: number;
 }
 

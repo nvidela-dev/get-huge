@@ -1,0 +1,215 @@
+{
+  "name": "Latvian Calisthenics",
+  "description": "4-day ULUL calisthenics program with dumbbells for accessories",
+  "type": "bodyweight",
+  "totalWeeks": null,
+  "daysPerWeek": 4,
+  "days": [
+    {
+      "dayNumber": 1,
+      "name": "Upper A",
+      "exercises": [
+        {
+          "name": "Wide Grip Pullups",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 6,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "Decline Pushups (Parallettes)",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 8,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "L-Sit Chinups",
+          "muscleGroup": "biceps",
+          "isCompound": true,
+          "isBodyweight": true,
+          "difficultyMultiplier": 1.3,
+          "targetSets": 5,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "Hammer Curls (Dumbbells)",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "isBodyweight": false,
+          "targetSets": 5,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "Lateral Delt Raises (Dumbbells)",
+          "muscleGroup": "shoulders",
+          "isCompound": false,
+          "isBodyweight": false,
+          "targetSets": 5,
+          "targetReps": "15",
+          "defaultReps": 15
+        },
+        {
+          "name": "Ring Rows",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "12",
+          "defaultReps": 12
+        }
+      ]
+    },
+    {
+      "dayNumber": 2,
+      "name": "Lower A",
+      "exercises": [
+        {
+          "name": "Split Squats",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "Romanian Deadlift (Bodyweight)",
+          "muscleGroup": "hamstrings",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "20",
+          "defaultReps": 20
+        },
+        {
+          "name": "Hanging Knee Raise",
+          "muscleGroup": "core",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "20",
+          "defaultReps": 20
+        },
+        {
+          "name": "Calf Raise (Hold)",
+          "muscleGroup": "calves",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "20",
+          "defaultReps": 20
+        }
+      ]
+    },
+    {
+      "dayNumber": 3,
+      "name": "Upper B",
+      "exercises": [
+        {
+          "name": "Wide Grip Pullups",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 6,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "Decline Pushups (Parallettes)",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 8,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "L-Sit Chinups",
+          "muscleGroup": "biceps",
+          "isCompound": true,
+          "isBodyweight": true,
+          "difficultyMultiplier": 1.3,
+          "targetSets": 5,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "Hammer Curls (Dumbbells)",
+          "muscleGroup": "biceps",
+          "isCompound": false,
+          "isBodyweight": false,
+          "targetSets": 5,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "Lateral Delt Raises (Dumbbells)",
+          "muscleGroup": "shoulders",
+          "isCompound": false,
+          "isBodyweight": false,
+          "targetSets": 5,
+          "targetReps": "15",
+          "defaultReps": 15
+        },
+        {
+          "name": "Ring Rows",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "12",
+          "defaultReps": 12
+        }
+      ]
+    },
+    {
+      "dayNumber": 4,
+      "name": "Lower B",
+      "exercises": [
+        {
+          "name": "Split Squats",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "12",
+          "defaultReps": 12
+        },
+        {
+          "name": "Romanian Deadlift (Bodyweight)",
+          "muscleGroup": "hamstrings",
+          "isCompound": true,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "20",
+          "defaultReps": 20
+        },
+        {
+          "name": "Hanging Knee Raise",
+          "muscleGroup": "core",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "20",
+          "defaultReps": 20
+        },
+        {
+          "name": "Calf Raise (Hold)",
+          "muscleGroup": "calves",
+          "isCompound": false,
+          "isBodyweight": true,
+          "targetSets": 5,
+          "targetReps": "20",
+          "defaultReps": 20
+        }
+      ]
+    }
+  ]
+}

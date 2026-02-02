@@ -93,6 +93,7 @@ async function seed() {
             muscleGroup: exData.muscleGroup,
             isCompound: exData.isCompound,
             isBodyweight: exData.isBodyweight || false,
+            difficultyMultiplier: exData.difficultyMultiplier?.toString() ?? "1.0",
           })
           .onConflictDoNothing()
           .returning();
@@ -121,6 +122,7 @@ async function seed() {
           order: i + 1,
           targetSets: exData.targetSets,
           targetReps: exData.targetReps,
+          defaultReps: exData.defaultReps ?? 10,
           rpeTarget: exData.rpeTarget?.toString() ?? null,
         });
 
