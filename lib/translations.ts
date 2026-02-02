@@ -153,6 +153,10 @@ export const translations = {
       setOf: "of",
       increaseWeight: "You hit 12 reps! Consider increasing weight",
       progressTo: "You hit 15 reps! Ready to progress to",
+      trackLaterMode: "Track Later Mode",
+      markDone: "Done",
+      markUndone: "Undo",
+      allExercises: "All Exercises",
     },
 
     // Onboarding
@@ -171,6 +175,23 @@ export const translations = {
       languageDesc: "Choose your preferred language",
       saved: "Saved!",
       saving: "Saving...",
+      trackLater: "Track Later Mode",
+      trackLaterDesc: "Mark exercises as done, fill in details later",
+      trackLaterEnabled: "Enabled",
+      trackLaterDisabled: "Disabled",
+      restTimer: "Rest Timer",
+      restTimerDesc: "Default rest time between sets",
+      seconds: "seconds",
+    },
+
+    // Rest timer
+    restTimer: {
+      title: "REST TIMER",
+      start: "START REST",
+      stop: "STOP",
+      reset: "RESET",
+      timeUp: "Time's Up!",
+      resting: "Resting...",
     },
 
     // Admin/Backoffice
@@ -379,6 +400,10 @@ export const translations = {
       setOf: "de",
       increaseWeight: "¡Llegaste a 12 reps! Considera aumentar el peso",
       progressTo: "¡Llegaste a 15 reps! Listo para progresar a",
+      trackLaterMode: "Modo Registro Posterior",
+      markDone: "Hecho",
+      markUndone: "Deshacer",
+      allExercises: "Todos los Ejercicios",
     },
 
     // Onboarding
@@ -397,6 +422,23 @@ export const translations = {
       languageDesc: "Elige tu idioma preferido",
       saved: "¡Guardado!",
       saving: "Guardando...",
+      trackLater: "Modo Registro Posterior",
+      trackLaterDesc: "Marca ejercicios como hechos, agrega detalles despues",
+      trackLaterEnabled: "Activado",
+      trackLaterDisabled: "Desactivado",
+      restTimer: "Temporizador de Descanso",
+      restTimerDesc: "Tiempo de descanso entre series",
+      seconds: "segundos",
+    },
+
+    // Rest timer
+    restTimer: {
+      title: "TEMPORIZADOR",
+      start: "INICIAR DESCANSO",
+      stop: "DETENER",
+      reset: "REINICIAR",
+      timeUp: "Tiempo!",
+      resting: "Descansando...",
     },
 
     // Admin/Backoffice

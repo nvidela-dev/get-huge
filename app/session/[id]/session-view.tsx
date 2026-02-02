@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logSet, endSession } from "./actions";
+import { RestTimer } from "./rest-timer";
+import { TrackLaterView } from "./track-later-view";
 import type { Translations } from "@/lib/translations";
 
 interface SessionViewProps {
@@ -38,6 +40,8 @@ interface SessionViewProps {
   weightUnit: string;
   isBodyweight: boolean;
   progressionNames: Record<string, string>;
+  trackLaterEnabled: boolean;
+  defaultRestSeconds: number;
   translations: Translations;
 }
 
@@ -50,6 +54,8 @@ export function SessionView({
   weightUnit,
   isBodyweight,
   progressionNames,
+  trackLaterEnabled,
+  defaultRestSeconds,
   translations: t,
 }: SessionViewProps) {
   const router = useRouter();
@@ -108,46 +114,73 @@ export function SessionView({
         </div>
       </header>
 
-      {/* Exercise navigation */}
-      <div className="flex gap-2 p-4 overflow-x-auto">
-        {exercises.map((ex, idx) => {
-          const sets = loggedSets.filter(
-            (s) => s.exerciseId === ex.id && !s.isWarmup
-          );
-          const isComplete = sets.length >= ex.targetSets;
-          return (
-            <button
-              key={ex.id}
-              onClick={() => setCurrentExerciseIndex(idx)}
-              className={`px-3 py-1 text-xs uppercase tracking-wider whitespace-nowrap transition-colors ${
-                idx === currentExerciseIndex
-                  ? "bg-crimson text-white"
-                  : isComplete
-                    ? "bg-steel-light text-bone/60"
-                    : "bg-steel text-bone/80"
-              }`}
-            >
-              {ex.name}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Current exercise */}
-      {currentExercise && (
-        <main className="flex-1 p-4">
-          <ExerciseCard
+      {trackLaterEnabled ? (
+        /* Track Later Mode - Show all exercises as checklist */
+        <main className="flex-1 p-4 space-y-4">
+          <TrackLaterView
             sessionId={session.id}
-            exercise={currentExercise}
-            sets={exerciseSets}
-            history={exerciseHistory[currentExercise.id]}
-            weightUnit={weightUnit}
-            isBodyweight={isBodyweight}
-            nextProgressionName={progressionNames[currentExercise.id]}
-            onSetLogged={() => router.refresh()}
+            exercises={exercises}
+            loggedSets={loggedSets}
+            translations={t}
+          />
+
+          {/* Rest Timer - also available in Track Later mode */}
+          <RestTimer
+            defaultSeconds={defaultRestSeconds}
             translations={t}
           />
         </main>
+      ) : (
+        /* Normal Mode - Exercise tabs and detailed logging */
+        <>
+          {/* Exercise navigation */}
+          <div className="flex gap-2 p-4 overflow-x-auto">
+            {exercises.map((ex, idx) => {
+              const sets = loggedSets.filter(
+                (s) => s.exerciseId === ex.id && !s.isWarmup
+              );
+              const isComplete = sets.length >= ex.targetSets;
+              return (
+                <button
+                  key={ex.id}
+                  onClick={() => setCurrentExerciseIndex(idx)}
+                  className={`px-3 py-1 text-xs uppercase tracking-wider whitespace-nowrap transition-colors ${
+                    idx === currentExerciseIndex
+                      ? "bg-crimson text-white"
+                      : isComplete
+                        ? "bg-steel-light text-bone/60"
+                        : "bg-steel text-bone/80"
+                  }`}
+                >
+                  {ex.name}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Current exercise */}
+          {currentExercise && (
+            <main className="flex-1 p-4 space-y-4">
+              <ExerciseCard
+                sessionId={session.id}
+                exercise={currentExercise}
+                sets={exerciseSets}
+                history={exerciseHistory[currentExercise.id]}
+                weightUnit={weightUnit}
+                isBodyweight={isBodyweight}
+                nextProgressionName={progressionNames[currentExercise.id]}
+                onSetLogged={() => router.refresh()}
+                translations={t}
+              />
+
+              {/* Rest Timer */}
+              <RestTimer
+                defaultSeconds={defaultRestSeconds}
+                translations={t}
+              />
+            </main>
+          )}
+        </>
       )}
 
       {/* Footer */}

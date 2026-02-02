@@ -34,6 +34,8 @@ export default async function SettingsPage() {
 
           <SettingsView
             currentLanguage={user.language as Language}
+            trackLaterEnabled={user.trackLaterEnabled}
+            defaultRestSeconds={user.defaultRestSeconds}
             translations={t}
           />
 

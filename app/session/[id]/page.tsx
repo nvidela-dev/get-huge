@@ -133,6 +133,8 @@ export default async function ActiveSessionPage({ params }: Props) {
       weightUnit={user.weightUnit}
       isBodyweight={isBodyweight}
       progressionNames={progressionNames}
+      trackLaterEnabled={user.trackLaterEnabled}
+      defaultRestSeconds={user.defaultRestSeconds}
       translations={t}
     />
   );

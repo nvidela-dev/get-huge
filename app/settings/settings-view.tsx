@@ -3,17 +3,32 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { updateLanguage } from "./actions";
+import {
+  updateLanguage,
+  updateTrackLaterEnabled,
+  updateDefaultRestSeconds,
+} from "./actions";
 import type { Language, Translations } from "@/lib/translations";
 
 interface SettingsViewProps {
   currentLanguage: Language;
+  trackLaterEnabled: boolean;
+  defaultRestSeconds: number;
   translations: Translations;
 }
 
-export function SettingsView({ currentLanguage, translations: t }: SettingsViewProps) {
+const REST_PRESETS = [60, 90, 120, 180];
+
+export function SettingsView({
+  currentLanguage,
+  trackLaterEnabled,
+  defaultRestSeconds,
+  translations: t,
+}: SettingsViewProps) {
   const router = useRouter();
   const [selected, setSelected] = useState<Language>(currentLanguage);
+  const [trackLater, setTrackLater] = useState(trackLaterEnabled);
+  const [restSeconds, setRestSeconds] = useState(defaultRestSeconds);
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
 
@@ -24,7 +39,26 @@ export function SettingsView({ currentLanguage, translations: t }: SettingsViewP
       await updateLanguage(language);
       setSaved(true);
       router.refresh();
-      // Hide saved message after 2 seconds
+      setTimeout(() => setSaved(false), 2000);
+    });
+  };
+
+  const handleTrackLaterChange = (enabled: boolean) => {
+    setTrackLater(enabled);
+    setSaved(false);
+    startTransition(async () => {
+      await updateTrackLaterEnabled(enabled);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    });
+  };
+
+  const handleRestSecondsChange = (seconds: number) => {
+    setRestSeconds(seconds);
+    setSaved(false);
+    startTransition(async () => {
+      await updateDefaultRestSeconds(seconds);
+      setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     });
   };
@@ -45,6 +79,83 @@ export function SettingsView({ currentLanguage, translations: t }: SettingsViewP
         <span className="text-bone/40">→</span>
       </Link>
 
+      {/* Track Later Mode Setting */}
+      <div className="card-brutal p-6">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h2 className="font-[family-name:var(--font-bebas)] text-xl text-foreground">
+              {t.settings.trackLater}
+            </h2>
+            <p className="text-bone/60 text-sm">{t.settings.trackLaterDesc}</p>
+          </div>
+          {isPending && (
+            <span className="text-bone/40 text-sm">{t.settings.saving}</span>
+          )}
+          {saved && !isPending && (
+            <span className="text-green-500 text-sm">{t.settings.saved}</span>
+          )}
+        </div>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleTrackLaterChange(false)}
+            disabled={isPending}
+            className={`flex-1 p-3 text-center transition-colors border ${
+              !trackLater
+                ? "border-crimson bg-crimson/10 text-foreground"
+                : "border-steel-light text-bone/60 hover:border-crimson/50"
+            } disabled:opacity-50`}
+          >
+            {t.settings.trackLaterDisabled}
+          </button>
+          <button
+            onClick={() => handleTrackLaterChange(true)}
+            disabled={isPending}
+            className={`flex-1 p-3 text-center transition-colors border ${
+              trackLater
+                ? "border-crimson bg-crimson/10 text-foreground"
+                : "border-steel-light text-bone/60 hover:border-crimson/50"
+            } disabled:opacity-50`}
+          >
+            {t.settings.trackLaterEnabled}
+          </button>
+        </div>
+      </div>
+
+      {/* Rest Timer Duration Setting */}
+      <div className="card-brutal p-6">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h2 className="font-[family-name:var(--font-bebas)] text-xl text-foreground">
+              {t.settings.restTimer}
+            </h2>
+            <p className="text-bone/60 text-sm">{t.settings.restTimerDesc}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 gap-2">
+          {REST_PRESETS.map((seconds) => (
+            <button
+              key={seconds}
+              onClick={() => handleRestSecondsChange(seconds)}
+              disabled={isPending}
+              className={`p-3 text-center transition-colors border ${
+                restSeconds === seconds
+                  ? "border-crimson bg-crimson/10 text-foreground"
+                  : "border-steel-light text-bone/60 hover:border-crimson/50"
+              } disabled:opacity-50`}
+            >
+              <span className="font-[family-name:var(--font-bebas)] text-lg">
+                {seconds}
+              </span>
+              <span className="text-xs block text-bone/40">
+                {t.settings.seconds}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Language Setting */}
       <div className="card-brutal p-6">
         <div className="flex justify-between items-start mb-4">
@@ -54,12 +165,6 @@ export function SettingsView({ currentLanguage, translations: t }: SettingsViewP
             </h2>
             <p className="text-bone/60 text-sm">{t.settings.languageDesc}</p>
           </div>
-          {isPending && (
-            <span className="text-bone/40 text-sm">{t.settings.saving}</span>
-          )}
-          {saved && !isPending && (
-            <span className="text-green-500 text-sm">{t.settings.saved}</span>
-          )}
         </div>
 
         <div className="space-y-2">

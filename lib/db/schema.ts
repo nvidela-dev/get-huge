@@ -21,6 +21,8 @@ export const users = pgTable("users", {
   planStartDate: date("plan_start_date"),
   weightUnit: text("weight_unit").default("kg").notNull(), // 'kg' or 'lbs'
   language: text("language").default("en").notNull(), // 'en' or 'es'
+  trackLaterEnabled: boolean("track_later_enabled").default(false).notNull(),
+  defaultRestSeconds: integer("default_rest_seconds").default(90).notNull(),
 });
 
 // Plans - loaded from JSON, not user-editable

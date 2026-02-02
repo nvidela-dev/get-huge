@@ -193,3 +193,41 @@ async function processSessionXp(sessionId: string) {
     }
   }
 }
+
+/**
+ * Mark an exercise as complete in Track Later mode
+ * Uses a placeholder set (setNumber: 0, isWarmup: true) to track completion
+ * This doesn't award XP but counts for session consistency
+ */
+export async function markExerciseComplete(
+  sessionId: string,
+  exerciseId: string,
+  completed: boolean
+) {
+  if (completed) {
+    // Insert a placeholder set to mark as complete
+    // Using setNumber: 0 and isWarmup: true so it's excluded from XP calculations
+    await db.insert(sessionSets).values({
+      sessionId,
+      exerciseId,
+      setNumber: 0,
+      weight: "0",
+      reps: 0,
+      isWarmup: true,
+    });
+  } else {
+    // Remove the placeholder set
+    await db
+      .delete(sessionSets)
+      .where(
+        and(
+          eq(sessionSets.sessionId, sessionId),
+          eq(sessionSets.exerciseId, exerciseId),
+          eq(sessionSets.setNumber, 0),
+          eq(sessionSets.isWarmup, true)
+        )
+      );
+  }
+
+  revalidatePath(`/session/${sessionId}`);
+}
