@@ -64,6 +64,8 @@ export const exercises = pgTable("exercises", {
   })
     .default("1.0")
     .notNull(),
+  // Optional video URL for form reference
+  videoUrl: text("video_url"),
 });
 
 // Plan Day Exercises - which exercises on which day

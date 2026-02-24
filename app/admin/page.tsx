@@ -64,6 +64,27 @@ export default async function AdminPage() {
       {/* Main Content */}
       <main className="flex-1 p-6">
         <div className="max-w-2xl mx-auto space-y-12">
+          {/* Exercises Section */}
+          <section>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="font-[family-name:var(--font-bebas)] text-3xl tracking-wide text-foreground">
+                {t.admin.exercises}
+              </h2>
+            </div>
+
+            <Link
+              href="/admin/exercises"
+              className="card-brutal p-4 block hover:border-crimson/50 transition-colors"
+            >
+              <div className="flex justify-between items-center">
+                <p className="text-bone">
+                  {t.admin.manageVideoUrls}
+                </p>
+                <span className="text-bone/40 text-sm">→</span>
+              </div>
+            </Link>
+          </section>
+
           {/* Plans Section */}
           <section>
             <div className="flex justify-between items-center mb-6">

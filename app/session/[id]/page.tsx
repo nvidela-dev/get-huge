@@ -65,6 +65,7 @@ export default async function ActiveSessionPage({ params }: Props) {
       rpeTarget: planDayExercises.rpeTarget,
       order: planDayExercises.order,
       nextProgressionId: exercises.nextProgressionId,
+      videoUrl: exercises.videoUrl,
     })
     .from(planDayExercises)
     .innerJoin(exercises, eq(planDayExercises.exerciseId, exercises.id))

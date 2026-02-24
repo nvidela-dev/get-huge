@@ -157,6 +157,7 @@ export const translations = {
       markDone: "Done",
       markUndone: "Undo",
       allExercises: "All Exercises",
+      watchForm: "Watch form",
     },
 
     // Onboarding
@@ -199,8 +200,11 @@ export const translations = {
       title: "BACKOFFICE",
       users: "Users",
       plans: "Plans",
+      exercises: "Exercises",
       assignPlan: "Assign Plan",
       noPlan: "No plan",
+      noVideo: "No video",
+      manageVideoUrls: "Manage exercise video URLs",
       assign: "Assign",
       remove: "Remove",
       userCount: "users",
@@ -404,6 +408,7 @@ export const translations = {
       markDone: "Hecho",
       markUndone: "Deshacer",
       allExercises: "Todos los Ejercicios",
+      watchForm: "Ver forma",
     },
 
     // Onboarding
@@ -446,8 +451,11 @@ export const translations = {
       title: "BACKOFFICE",
       users: "Usuarios",
       plans: "Planes",
+      exercises: "Ejercicios",
       assignPlan: "Asignar Plan",
       noPlan: "Sin plan",
+      noVideo: "Sin video",
+      manageVideoUrls: "Gestionar URLs de videos de ejercicios",
       assign: "Asignar",
       remove: "Quitar",
       userCount: "usuarios",
