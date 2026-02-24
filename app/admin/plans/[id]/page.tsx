@@ -58,6 +58,7 @@ export default async function AdminPlanEditPage({ params }: Props) {
           targetReps: planDayExercises.targetReps,
           defaultReps: planDayExercises.defaultReps,
           order: planDayExercises.order,
+          videoUrl: exercises.videoUrl,
         })
         .from(planDayExercises)
         .innerJoin(exercises, eq(planDayExercises.exerciseId, exercises.id))

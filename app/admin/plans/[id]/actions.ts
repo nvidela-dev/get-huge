@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { plans, planDays, planDayExercises } from "@/lib/db/schema";
+import { plans, planDays, planDayExercises, exercises } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -72,6 +72,21 @@ export async function deletePlan(planId: string) {
 
   // Delete plan (days and exercises will cascade)
   await db.delete(plans).where(eq(plans.id, planId));
+
+  revalidatePath("/admin");
+}
+
+export async function updateExerciseVideoUrl(
+  exerciseId: string,
+  videoUrl: string | null
+) {
+  const admin = await getAdminUser();
+  if (!admin) throw new Error("Unauthorized");
+
+  await db
+    .update(exercises)
+    .set({ videoUrl })
+    .where(eq(exercises.id, exerciseId));
 
   revalidatePath("/admin");
 }

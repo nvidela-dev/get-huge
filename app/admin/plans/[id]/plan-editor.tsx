@@ -8,6 +8,7 @@ import {
   addExerciseToDay,
   updateDayName,
   deletePlan,
+  updateExerciseVideoUrl,
 } from "./actions";
 import type { Translations } from "@/lib/translations";
 
@@ -20,6 +21,7 @@ interface Exercise {
   targetReps: string;
   defaultReps: number;
   order: number;
+  videoUrl: string | null;
 }
 
 interface Day {
@@ -254,6 +256,8 @@ function ExerciseRow({ exercise, translations: t }: ExerciseRowProps) {
   const [sets, setSets] = useState(exercise.targetSets.toString());
   const [reps, setReps] = useState(exercise.targetReps);
   const [defaultReps, setDefaultReps] = useState(exercise.defaultReps.toString());
+  const [videoUrl, setVideoUrl] = useState(exercise.videoUrl ?? "");
+  const [showVideoInput, setShowVideoInput] = useState(false);
 
   const handleUpdate = () => {
     const newSets = parseInt(sets);
@@ -275,6 +279,20 @@ function ExerciseRow({ exercise, translations: t }: ExerciseRowProps) {
     });
   };
 
+  const handleVideoUpdate = () => {
+    const newUrl = videoUrl.trim() || null;
+    if (newUrl === exercise.videoUrl) {
+      setShowVideoInput(false);
+      return;
+    }
+
+    startTransition(async () => {
+      await updateExerciseVideoUrl(exercise.exerciseId, newUrl);
+      setShowVideoInput(false);
+      router.refresh();
+    });
+  };
+
   const handleRemove = () => {
     startTransition(async () => {
       await removePlanDayExercise(exercise.id);
@@ -283,60 +301,122 @@ function ExerciseRow({ exercise, translations: t }: ExerciseRowProps) {
   };
 
   return (
-    <div className="flex items-center gap-3 bg-steel p-3 border border-steel-light">
-      {/* Exercise name */}
-      <div className="flex-1 min-w-0">
-        <p className="text-bone font-medium truncate">{exercise.name}</p>
-        <p className="text-bone/40 text-xs uppercase">{exercise.muscleGroup}</p>
+    <div className="bg-steel p-3 border border-steel-light space-y-2">
+      <div className="flex items-center gap-3">
+        {/* Exercise name */}
+        <div className="flex-1 min-w-0">
+          <p className="text-bone font-medium truncate">{exercise.name}</p>
+          <p className="text-bone/40 text-xs uppercase">{exercise.muscleGroup}</p>
+        </div>
+
+        {/* Sets */}
+        <div className="w-16">
+          <label className="block text-bone/40 text-xs mb-1">{t.admin.sets}</label>
+          <input
+            type="number"
+            value={sets}
+            onChange={(e) => setSets(e.target.value)}
+            onBlur={handleUpdate}
+            className="w-full bg-steel-dark border border-steel-light px-2 py-1 text-bone text-center text-sm focus:outline-none focus:border-crimson"
+          />
+        </div>
+
+        {/* Target Reps */}
+        <div className="w-20">
+          <label className="block text-bone/40 text-xs mb-1">{t.admin.reps}</label>
+          <input
+            type="text"
+            value={reps}
+            onChange={(e) => setReps(e.target.value)}
+            onBlur={handleUpdate}
+            placeholder="8-12"
+            className="w-full bg-steel-dark border border-steel-light px-2 py-1 text-bone text-center text-sm focus:outline-none focus:border-crimson"
+          />
+        </div>
+
+        {/* Default Reps */}
+        <div className="w-16">
+          <label className="block text-bone/40 text-xs mb-1 truncate" title={t.admin.defaultReps}>
+            Def
+          </label>
+          <input
+            type="number"
+            value={defaultReps}
+            onChange={(e) => setDefaultReps(e.target.value)}
+            onBlur={handleUpdate}
+            className="w-full bg-steel-dark border border-steel-light px-2 py-1 text-bone text-center text-sm focus:outline-none focus:border-crimson"
+          />
+        </div>
+
+        {/* Remove button */}
+        <button
+          onClick={handleRemove}
+          disabled={isPending}
+          className="text-crimson/60 hover:text-crimson text-xs px-2 disabled:opacity-50"
+        >
+          {t.admin.removeExercise}
+        </button>
       </div>
 
-      {/* Sets */}
-      <div className="w-16">
-        <label className="block text-bone/40 text-xs mb-1">{t.admin.sets}</label>
-        <input
-          type="number"
-          value={sets}
-          onChange={(e) => setSets(e.target.value)}
-          onBlur={handleUpdate}
-          className="w-full bg-steel-dark border border-steel-light px-2 py-1 text-bone text-center text-sm focus:outline-none focus:border-crimson"
-        />
+      {/* Video URL row */}
+      <div className="flex items-center gap-2 pt-1 border-t border-steel-light/50">
+        {showVideoInput ? (
+          <>
+            <input
+              type="url"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="https://youtube.com/watch?v=..."
+              className="flex-1 bg-steel-dark border border-steel-light px-2 py-1 text-bone text-sm focus:outline-none focus:border-crimson"
+            />
+            <button
+              onClick={handleVideoUpdate}
+              disabled={isPending}
+              className="text-crimson text-xs px-2 disabled:opacity-50"
+            >
+              {t.history.save}
+            </button>
+            <button
+              onClick={() => {
+                setVideoUrl(exercise.videoUrl ?? "");
+                setShowVideoInput(false);
+              }}
+              className="text-bone/40 hover:text-bone text-xs px-2"
+            >
+              {t.history.cancel}
+            </button>
+          </>
+        ) : (
+          <>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-4 h-4 text-bone/40"
+            >
+              <path d="M4.5 4.5a3 3 0 00-3 3v9a3 3 0 003 3h8.25a3 3 0 003-3v-9a3 3 0 00-3-3H4.5zM19.94 18.75l-2.69-2.69V7.94l2.69-2.69c.944-.945 2.56-.276 2.56 1.06v11.38c0 1.336-1.616 2.005-2.56 1.06z" />
+            </svg>
+            {exercise.videoUrl ? (
+              <a
+                href={exercise.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-crimson text-xs hover:underline truncate flex-1"
+              >
+                {exercise.videoUrl}
+              </a>
+            ) : (
+              <span className="text-bone/40 text-xs flex-1">{t.admin.noVideo}</span>
+            )}
+            <button
+              onClick={() => setShowVideoInput(true)}
+              className="text-crimson/60 hover:text-crimson text-xs px-2"
+            >
+              {t.history.edit}
+            </button>
+          </>
+        )}
       </div>
-
-      {/* Target Reps */}
-      <div className="w-20">
-        <label className="block text-bone/40 text-xs mb-1">{t.admin.reps}</label>
-        <input
-          type="text"
-          value={reps}
-          onChange={(e) => setReps(e.target.value)}
-          onBlur={handleUpdate}
-          placeholder="8-12"
-          className="w-full bg-steel-dark border border-steel-light px-2 py-1 text-bone text-center text-sm focus:outline-none focus:border-crimson"
-        />
-      </div>
-
-      {/* Default Reps */}
-      <div className="w-16">
-        <label className="block text-bone/40 text-xs mb-1 truncate" title={t.admin.defaultReps}>
-          Def
-        </label>
-        <input
-          type="number"
-          value={defaultReps}
-          onChange={(e) => setDefaultReps(e.target.value)}
-          onBlur={handleUpdate}
-          className="w-full bg-steel-dark border border-steel-light px-2 py-1 text-bone text-center text-sm focus:outline-none focus:border-crimson"
-        />
-      </div>
-
-      {/* Remove button */}
-      <button
-        onClick={handleRemove}
-        disabled={isPending}
-        className="text-crimson/60 hover:text-crimson text-xs px-2 disabled:opacity-50"
-      >
-        {t.admin.removeExercise}
-      </button>
     </div>
   );
 }
