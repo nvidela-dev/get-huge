@@ -285,6 +285,58 @@ export async function getTrainingStatus(userId: string): Promise<TrainingStatus>
   };
 }
 
+export async function getAvailablePlanDaysWithExercises(userId: string) {
+  // Get user's current plan
+  const userResults = await db
+    .select({ currentPlanId: users.currentPlanId })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  const user = userResults[0];
+
+  if (!user || !user.currentPlanId) {
+    return [];
+  }
+
+  // Get all plan days for this plan
+  const allPlanDays = await db
+    .select()
+    .from(planDays)
+    .where(eq(planDays.planId, user.currentPlanId))
+    .orderBy(planDays.dayNumber);
+
+  // Fetch exercises for each plan day
+  const planDaysWithExercises = await Promise.all(
+    allPlanDays.map(async (planDay) => {
+      const dayExercises = await db
+        .select({
+          id: exercises.id,
+          name: exercises.name,
+          muscleGroup: exercises.muscleGroup,
+          targetSets: planDayExercises.targetSets,
+          targetReps: planDayExercises.targetReps,
+          rpeTarget: planDayExercises.rpeTarget,
+          order: planDayExercises.order,
+        })
+        .from(planDayExercises)
+        .innerJoin(exercises, eq(planDayExercises.exerciseId, exercises.id))
+        .where(eq(planDayExercises.planDayId, planDay.id))
+        .orderBy(planDayExercises.order);
+
+      return {
+        id: planDay.id,
+        name: planDay.name,
+        dayNumber: planDay.dayNumber,
+        weekVariant: planDay.weekVariant,
+        exercises: dayExercises,
+      };
+    })
+  );
+
+  return planDaysWithExercises;
+}
+
 export async function startSession(
   userId: string,
   planDayId: string,

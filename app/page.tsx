@@ -1,10 +1,11 @@
 import { UserButton } from "@clerk/nextjs";
 import { getOrCreateUser } from "@/lib/auth";
-import { getTrainingStatus } from "@/lib/training";
+import { getTrainingStatus, getAvailablePlanDaysWithExercises } from "@/lib/training";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { getTranslations, type Language, type Translations } from "@/lib/translations";
+import ReadyToTrainView from "@/app/components/ReadyToTrainView";
 
 export default async function Home() {
   const user = await getOrCreateUser();
@@ -20,6 +21,11 @@ export default async function Home() {
   if (status.type === "no_plan") {
     redirect("/onboarding");
   }
+
+  // Fetch available plan days if user is ready to train
+  const availablePlanDays = status.type === "ready"
+    ? await getAvailablePlanDaysWithExercises(user.id)
+    : [];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -53,6 +59,8 @@ export default async function Home() {
           <ReadyToTrainView
             userName={user.name}
             trainingDay={status.trainingDay}
+            availablePlanDays={availablePlanDays}
+            currentWeek={status.trainingDay.weekNumber}
             t={t}
           />
         )}
@@ -310,86 +318,3 @@ function RecoveryDayView({ t }: { t: Translations }) {
   );
 }
 
-function ReadyToTrainView({
-  userName,
-  trainingDay,
-  t,
-}: {
-  userName: string | null;
-  trainingDay: {
-    weekNumber: number;
-    dayNumber: number;
-    dayName: string;
-    planDayId: string;
-    exercises: {
-      id: string;
-      name: string;
-      muscleGroup: string;
-      targetSets: number;
-      targetReps: string;
-    }[];
-  };
-  t: Translations;
-}) {
-  // Group exercises by muscle group
-  const exercisesByMuscle = trainingDay.exercises.reduce((acc, ex) => {
-    const group = ex.muscleGroup;
-    if (!acc[group]) {
-      acc[group] = [];
-    }
-    acc[group].push(ex);
-    return acc;
-  }, {} as Record<string, typeof trainingDay.exercises>);
-
-  const muscleGroups = Object.entries(exercisesByMuscle);
-
-  return (
-    <div className="text-center space-y-8">
-      {/* Greeting */}
-      <p className="text-bone text-lg">
-        {userName ? `${t.home.letsGo}, ${userName}` : t.home.letsGo}
-      </p>
-
-      {/* Session indicator */}
-      <div className="space-y-2">
-        <p className="text-bone/60 uppercase tracking-widest text-sm">
-          {t.home.week} {trainingDay.weekNumber}
-        </p>
-        <h2 className="font-[family-name:var(--font-bebas)] text-6xl sm:text-7xl tracking-wide text-foreground">
-          {t.home.session} {trainingDay.dayNumber}
-        </h2>
-      </div>
-
-      {/* Start button */}
-      <Link
-        href={`/session/start?planDayId=${trainingDay.planDayId}&week=${trainingDay.weekNumber}&day=${trainingDay.dayNumber}`}
-        className="btn-brutal inline-block px-12 py-4 text-xl font-[family-name:var(--font-bebas)] tracking-widest"
-      >
-        {t.home.startSession}
-      </Link>
-
-      {/* Exercise preview - two columns */}
-      <div className="card-brutal p-6 max-w-lg mx-auto mt-8">
-        <p className="text-bone/60 uppercase tracking-widest text-xs mb-4">
-          {t.home.todaysLifts}
-        </p>
-        <div className="grid grid-cols-2 gap-4 text-left">
-          {muscleGroups.map(([muscleGroup, exercises]) => (
-            <div key={muscleGroup}>
-              <p className="text-crimson text-xs uppercase tracking-wider mb-1">
-                {muscleGroup}
-              </p>
-              <ul className="space-y-1 text-bone/80 text-sm">
-                {exercises.map((ex) => (
-                  <li key={ex.id}>
-                    {ex.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}

@@ -23,6 +23,8 @@ export const translations = {
       session: "SESSION",
       startSession: "START SESSION",
       todaysLifts: "Today's Lifts",
+      selectSession: "Select Session",
+      recommended: "RECOMMENDED",
     },
 
     // No plan view
@@ -274,6 +276,8 @@ export const translations = {
       session: "SESIÓN",
       startSession: "INICIAR SESIÓN",
       todaysLifts: "Ejercicios de Hoy",
+      selectSession: "Seleccionar Sesión",
+      recommended: "RECOMENDADO",
     },
 
     // No plan view
