@@ -1,43 +1,52 @@
 {
   "name": "Weekly Training Split",
-  "description": "3-day upper/full body split: Tuesday, Thursday, Saturday",
+  "description": "Machine-focused variation for building foundational strength. 3 sessions per week.",
+  "type": "weightlifting",
   "totalWeeks": null,
   "daysPerWeek": 3,
   "days": [
     {
       "dayNumber": 1,
-      "name": "Day 1",
+      "name": "Session 1",
       "exercises": [
         {
           "name": "Incline Press",
           "muscleGroup": "chest",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "8-10",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
-          "name": "Chin Up",
+          "name": "Lat Pulldown (Wide Grip)",
           "muscleGroup": "back",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "6-10",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
           "name": "Lateral Flies",
           "muscleGroup": "shoulders",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "12-15",
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
-          "name": "Chest Flies",
-          "muscleGroup": "chest",
+          "name": "Rear Delt Raises",
+          "muscleGroup": "shoulders",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "12-15",
+          "targetReps": "12",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Hack Squat",
+          "muscleGroup": "quads",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
@@ -45,23 +54,15 @@
           "muscleGroup": "biceps",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "10-12",
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
-          "name": "Military Press",
-          "muscleGroup": "shoulders",
-          "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "8-10",
-          "rpeTarget": 8
-        },
-        {
-          "name": "Cable Triceps",
+          "name": "Dips",
           "muscleGroup": "triceps",
-          "isCompound": false,
+          "isCompound": true,
           "targetSets": 3,
-          "targetReps": "12-15",
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
@@ -69,61 +70,69 @@
           "muscleGroup": "forearms",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "15-20",
+          "targetReps": "8",
           "rpeTarget": 7
         }
       ]
     },
     {
       "dayNumber": 2,
-      "name": "Day 2",
+      "name": "Session 2",
       "exercises": [
         {
-          "name": "Pullup (Closed Grip)",
+          "name": "Close Grip Rows",
           "muscleGroup": "back",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "6-10",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
           "name": "Lateral Flies",
           "muscleGroup": "shoulders",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "12-15",
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
-          "name": "Open Grip Lat Pulldown",
-          "muscleGroup": "back",
+          "name": "Shoulder Press",
+          "muscleGroup": "shoulders",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "10-12",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
-          "name": "Flat Chest Press",
+          "name": "Seated Row",
+          "muscleGroup": "back",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Chest Press",
           "muscleGroup": "chest",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "8-10",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
           "name": "Bicep Cable Curl",
           "muscleGroup": "biceps",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "10-12",
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
-          "name": "Cable Tricep",
+          "name": "Dips",
           "muscleGroup": "triceps",
-          "isCompound": false,
+          "isCompound": true,
           "targetSets": 3,
-          "targetReps": "12-15",
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
@@ -131,7 +140,7 @@
           "muscleGroup": "biceps",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "10-12",
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
@@ -139,53 +148,69 @@
           "muscleGroup": "forearms",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "15-20",
+          "targetReps": "8",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Hamstring Curl Machine",
+          "muscleGroup": "hamstrings",
+          "isCompound": false,
+          "targetSets": 3,
+          "targetReps": "10",
           "rpeTarget": 7
         }
       ]
     },
     {
       "dayNumber": 3,
-      "name": "Day 3",
+      "name": "Session 3",
       "exercises": [
         {
-          "name": "Tricep Dips",
+          "name": "Dips",
           "muscleGroup": "triceps",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "8-12",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
-          "name": "Chinup",
+          "name": "Lat Pulldown (Close Grip)",
           "muscleGroup": "back",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "6-10",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
-          "name": "Squat",
+          "name": "Leg Press",
           "muscleGroup": "quads",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "6-8",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
-          "name": "Deadlift",
-          "muscleGroup": "back",
+          "name": "Dumbbell Romanian Deadlift",
+          "muscleGroup": "hamstrings",
           "isCompound": true,
-          "targetSets": 4,
-          "targetReps": "5-6",
-          "rpeTarget": 8
+          "targetSets": 3,
+          "targetReps": "8",
+          "rpeTarget": 7
         },
         {
           "name": "Incline Press",
           "muscleGroup": "chest",
           "isCompound": true,
           "targetSets": 3,
-          "targetReps": "8-10",
+          "targetReps": "8",
+          "rpeTarget": 7
+        },
+        {
+          "name": "Chest Machine",
+          "muscleGroup": "chest",
+          "isCompound": true,
+          "targetSets": 3,
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
@@ -193,7 +218,7 @@
           "muscleGroup": "biceps",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "10-12",
+          "targetReps": "8",
           "rpeTarget": 7
         },
         {
@@ -201,23 +226,7 @@
           "muscleGroup": "shoulders",
           "isCompound": false,
           "targetSets": 3,
-          "targetReps": "12-15",
-          "rpeTarget": 7
-        },
-        {
-          "name": "Military Press",
-          "muscleGroup": "shoulders",
-          "isCompound": true,
-          "targetSets": 3,
-          "targetReps": "8-10",
-          "rpeTarget": 7
-        },
-        {
-          "name": "Squat",
-          "muscleGroup": "quads",
-          "isCompound": true,
-          "targetSets": 3,
-          "targetReps": "10-12",
+          "targetReps": "8",
           "rpeTarget": 7
         }
       ]
