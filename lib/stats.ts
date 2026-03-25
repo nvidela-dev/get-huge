@@ -15,7 +15,7 @@ import {
   endOfWeek,
   startOfMonth,
   endOfMonth,
-  differenceInWeeks,
+  differenceInDays,
 } from "date-fns";
 import { getXpProgress, sortMuscleGroups } from "./gamification";
 
@@ -109,19 +109,23 @@ export async function getConsistencyMetrics(
   // Calculate session completion rate (avg % of target sets completed per session)
   const sessionCompletionRate = await calculateSessionCompletionRate(userId);
 
-  // Weekly rate: sessions this week / expected sessions per week
+  // Weekly rate: sessions this week / expected sessions based on days elapsed
+  // e.g., if it's Wednesday (day 3) on a 4-day plan, expected = (3/7) * 4 ≈ 1.7
+  const daysElapsedThisWeek = differenceInDays(now, weekStart) + 1; // +1 to include today
+  const expectedWeekSessionsByNow = (daysElapsedThisWeek / 7) * daysPerWeek;
   const weeklyRate = Math.min(
     100,
-    Math.round((weekSessions.length / daysPerWeek) * 100)
+    Math.round((weekSessions.length / expectedWeekSessionsByNow) * 100)
   );
 
-  // Monthly rate: sessions this month / expected sessions per month
-  // Expected = daysPerWeek * (weeks in month, typically ~4.3)
-  const weeksInMonth = 4;
-  const expectedMonthSessions = daysPerWeek * weeksInMonth;
+  // Monthly rate: sessions this month / expected sessions based on days elapsed
+  // Proportional to how far through the month we are
+  const daysElapsedThisMonth = differenceInDays(now, monthStart) + 1;
+  const weeksElapsedThisMonth = daysElapsedThisMonth / 7;
+  const expectedMonthSessionsByNow = weeksElapsedThisMonth * daysPerWeek;
   const monthlyRate = Math.min(
     100,
-    Math.round((monthSessions.length / expectedMonthSessions) * 100)
+    Math.round((monthSessions.length / expectedMonthSessionsByNow) * 100)
   );
 
   // Check if user has enough data (at least 1 completed session)
