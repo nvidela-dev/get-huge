@@ -1,6 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher([
+  // Browsers fetch installation metadata without an authenticated session.
+  "/manifest.json",
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/webhooks(.*)",
