@@ -29,14 +29,17 @@ export default async function AdminPage() {
     .leftJoin(plans, eq(users.currentPlanId, plans.id))
     .orderBy(users.createdAt);
 
-  // Only templates are available in the shared catalog and assignment options.
+  // Admin management includes custom plans as well as templates.
   const allPlans = await db
     .select({
       id: plans.id,
       name: plans.name,
+      isTemplate: plans.isTemplate,
     })
-    .from(plans)
-    .where(eq(plans.isTemplate, true));
+    .from(plans);
+
+  // Shared assignment options remain template-only.
+  const assignablePlans = allPlans.filter((plan) => plan.isTemplate);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -122,7 +125,7 @@ export default async function AdminPage() {
 
             <AdminUserList
               users={allUsers}
-              plans={allPlans}
+              plans={assignablePlans}
               translations={t}
             />
           </section>
