@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { Translations } from "@/lib/translations";
+import { notifyRestTimer, prepareRestTimerNotifications, requestRestTimerPermission } from "./rest-timer-notifications";
 
 interface RestTimerProps {
   defaultSeconds: number;
@@ -44,29 +45,22 @@ export function RestTimer({ defaultSeconds, translations: t }: RestTimerProps) {
     };
   }, [isRunning]);
 
-  // Play alarm and send notification when timer finishes
-  useEffect(() => {
-    if (hasFinished) {
-      playAlarm();
-      sendNotification();
-    }
-  }, [hasFinished]);
-
   // Audio alarm using Web Audio API
-  const playAlarm = useCallback(() => {
+  const playAlarm = useCallback(async () => {
     try {
       // Create or resume audio context (needed for iOS Safari)
       if (!audioContextRef.current) {
-        audioContextRef.current = new (window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext)();
+        const AudioContextClass = window.AudioContext ||
+          (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!AudioContextClass) return;
+        audioContextRef.current = new AudioContextClass();
       }
 
       const ctx = audioContextRef.current;
 
       // Resume context if suspended (iOS requirement)
       if (ctx.state === "suspended") {
-        ctx.resume();
+        await ctx.resume();
       }
 
       // Create oscillator for beep sound
@@ -90,38 +84,38 @@ export function RestTimer({ defaultSeconds, translations: t }: RestTimerProps) {
       playBeep(now, 0.15);
       playBeep(now + 0.25, 0.15);
       playBeep(now + 0.5, 0.15);
-    } catch (err) {
-      console.error("Audio playback failed:", err);
+    } catch {
+      // Audio is best effort, including rejected resume promises.
     }
   }, []);
 
-  // Request notification permission
-  const requestNotificationPermission = async () => {
-    if ("Notification" in window && Notification.permission === "default") {
-      await Notification.requestPermission();
-    }
-  };
+  useEffect(() => {
+    void prepareRestTimerNotifications();
+  }, []);
 
-  // Send push notification
-  const sendNotification = () => {
-    if ("Notification" in window && Notification.permission === "granted") {
-      new Notification(t.restTimer.timeUp, {
-        body: t.appName,
-        icon: "/icons/icon-192.png",
-        tag: "rest-timer",
-      });
+  // Alarm and notification failures are independent of each other and timer state.
+  useEffect(() => {
+    if (hasFinished) {
+      void playAlarm();
+      void notifyRestTimer(t.restTimer.timeUp, t.appName);
     }
-  };
+  }, [hasFinished, playAlarm, t.restTimer.timeUp, t.appName]);
 
   const startTimer = () => {
-    // Request notification permission on first start
-    requestNotificationPermission();
+    void requestRestTimerPermission();
 
-    // Initialize audio context on user interaction (required by browsers)
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext)();
+    // Initialize/resume during user interaction; audio is optional.
+    try {
+      if (!audioContextRef.current) {
+        const AudioContextClass = window.AudioContext ||
+          (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (AudioContextClass) audioContextRef.current = new AudioContextClass();
+      }
+      if (audioContextRef.current?.state === "suspended") {
+        void audioContextRef.current.resume().catch(() => {});
+      }
+    } catch {
+      // Unsupported audio must not prevent the countdown from starting.
     }
 
     setHasFinished(false);
