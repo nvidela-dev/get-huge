@@ -16,18 +16,20 @@ export default async function AdminPage() {
 
   const t = getTranslations(admin.language as Language);
 
-  // Get all users
+  // Resolve assigned plans independently of the template catalog.
   const allUsers = await db
     .select({
       id: users.id,
       email: users.email,
       name: users.name,
       currentPlanId: users.currentPlanId,
+      planName: plans.name,
     })
     .from(users)
+    .leftJoin(plans, eq(users.currentPlanId, plans.id))
     .orderBy(users.createdAt);
 
-  // Get all plans
+  // Only templates are available in the shared catalog and assignment options.
   const allPlans = await db
     .select({
       id: plans.id,
@@ -35,15 +37,6 @@ export default async function AdminPage() {
     })
     .from(plans)
     .where(eq(plans.isTemplate, true));
-
-  // Create a map of plan IDs to names
-  const planMap = Object.fromEntries(allPlans.map((p) => [p.id, p.name]));
-
-  // Add plan names to users
-  const usersWithPlans = allUsers.map((u) => ({
-    ...u,
-    planName: u.currentPlanId ? planMap[u.currentPlanId] ?? null : null,
-  }));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -128,7 +121,7 @@ export default async function AdminPage() {
             </div>
 
             <AdminUserList
-              users={usersWithPlans}
+              users={allUsers}
               plans={allPlans}
               translations={t}
             />

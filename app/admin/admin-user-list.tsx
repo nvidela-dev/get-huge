@@ -89,6 +89,11 @@ function UserRow({ user, plans, translations: t }: UserRowProps) {
             className="bg-steel border border-steel-light px-3 py-2 text-bone text-sm focus:outline-none focus:border-crimson disabled:opacity-50"
           >
             <option value="">{t.admin.noPlan}</option>
+            {/* Keep a custom assignment visible only for its current user. */}
+            {user.currentPlanId && user.planName !== null &&
+              !plans.some((plan) => plan.id === user.currentPlanId) && (
+                <option value={user.currentPlanId}>{user.planName}</option>
+              )}
             {plans.map((plan) => (
               <option key={plan.id} value={plan.id}>
                 {plan.name}
